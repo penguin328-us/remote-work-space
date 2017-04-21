@@ -13,7 +13,11 @@ body,
     position: relative;
 }
 
-.splitter .handlerbar{
+.horizontal .handlerbar{
     cursor: col-resize;
+}
+
+.vertical .handlerbar{
+    cursor: row-resize;
 }
 

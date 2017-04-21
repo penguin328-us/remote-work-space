@@ -18,7 +18,7 @@ gulp.task("compile-ts", function () {
 });
 
 gulp.task("copy-html", function () {
-    return gulp.src("src/views/**/*.{html,css}")
+    return gulp.src(`${src}/views/**/*.{html,css}`)
         .pipe(gulp.dest(`${dest}/client`));
 });
 
@@ -35,4 +35,7 @@ gulp.task("browserify", ["compile-ts"], function () {
 
 gulp.task("default", ["copy-html", "browserify"]);
 
-
+gulp.task("dev", ["default"], function () {
+    gulp.watch(`${src}/**/*.{ts,tsx}`, ["browserify"]);
+    gulp.watch(`${src}/views/**/*.{html,css}`, ["copy-html"])
+});
