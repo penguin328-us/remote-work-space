@@ -33,8 +33,6 @@ interface ISplitterState {
     secondPane: IPosition;
 }
 
-const handlerbarWidth: number = 5;
-
 export class Splitter extends React.Component<ISplitterProperty, ISplitterState>{
     private splitterRootDiv: HTMLDivElement = null;
     private lastX:number = 0;
@@ -70,6 +68,7 @@ export class Splitter extends React.Component<ISplitterProperty, ISplitterState>
     }
 
     calculateState(width?: number): ISplitterState {
+        const handlerbarWidth: number = 5;
         const size = this.getSize();
         if (size) {
             const maxWidth = this.props.vertical ? size.height : size.width;
