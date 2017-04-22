@@ -18,6 +18,17 @@ function initRestApi(app: express.Express): void {
     app.get(`${FileServiceNameSpace}/getFolderStructure`, (req, res) => {
         res.send(root);
     });
+
+    app.get(`${FileServiceNameSpace}/readFile`, (req, res) => {
+        const fullPath = path.join(baseFolder, req.query.path);
+        fs.readFile(fullPath, (err, data) => {
+            if (err) {
+                res.statusCode = 500;
+                res.send(err)
+            }
+            res.send(data);
+        });
+    });
 }
 
 function buildFolderStructure(complete?: () => void): void {

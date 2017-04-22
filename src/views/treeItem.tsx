@@ -41,8 +41,10 @@ export class TreeItem extends React.Component<ITreeItemProperty, ITreeItemState>
         const className = this.props.file.type === FileType.Folder ? "folder" : "file";
         return (
             <li className={className}>
-                {expandIcon}
-                <span>{this.props.file.name}</span>
+                <div className="text">
+                    {expandIcon}
+                    <span>{this.props.file.name}</span>
+                </div>
                 {content}
             </li>
         )

@@ -12,3 +12,7 @@ svg.loading path,
 svg.loading rect{
     fill: white;
 }
+
+.treeItem .text:hover{
+    background-color: #444444;
+}
