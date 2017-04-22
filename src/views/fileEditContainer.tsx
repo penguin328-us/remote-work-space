@@ -38,13 +38,17 @@ export class FileEditContainer extends React.Component<any, IFileEditState>{
         const headers = this.state.opendFiles.map(f => {
             const className = f.path === this.state.activeFile ?
                 "item active" : "item";
-            return (<div className={className} key={f.path} onClick={()=>this.onClickItem(f.path)}>{f.name}</div>)
+            return (<div className={className} key={f.path} onClick={() => this.onClickItem(f.path)}>{f.name}</div>)
+        });
+
+        const editors = this.state.opendFiles.map(f => {
+            return (<FileEditor file={f} />)
         });
         return (
             <div className="file-edit-container">
                 <div className="header">{headers}</div>
                 <div className="body">
-                    <FileEditor />
+                    {editors}
                 </div>
             </div>
         );

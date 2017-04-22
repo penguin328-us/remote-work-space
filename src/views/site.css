@@ -73,7 +73,7 @@ body,
 .file-edit-container .header{
     position: absolute;
     top:0px;
-    bottom: 40px;
+    bottom: 35px;
     left: 0px;
     right: 0px;
     font-size: 14px;
@@ -92,7 +92,7 @@ body,
 
 .file-edit-container .body{
     position: absolute;
-    top:40px;
+    top:35px;
     bottom: 0px;
     left: 0px;
     right: 0px;

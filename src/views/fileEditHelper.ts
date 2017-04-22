@@ -42,3 +42,7 @@ export function setActiveFile(filePath:string){
         activeFileChangeEvent.trigger(activeFile);
     }
 }
+
+export function getActiveFile():string{
+    return activeFile;
+}

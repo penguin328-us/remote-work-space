@@ -25,6 +25,7 @@ export class MonacoEditor extends React.Component<IMonacoEditorProperty, any>{
             this.editor = monaco.editor.create(this.refs['editor'] as HTMLDivElement, {
                 value: this.props.value,
                 language: this.props.language,
+                theme: "vs-dark"
             });
 
             this.editor.onDidChangeModelContent(event => {

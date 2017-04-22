@@ -18,18 +18,18 @@ svg.loading rect{
 }
 
 .file-edit-container .header{
-    background-color: #444444;
+    background-color: #333333;
 }
 
 .file-edit-container .header .item{
-    background-color: #555555;
+    background-color: #444444;
 }
 
 .file-edit-container .header .active{
-    background-color: #333333;
+    background-color: #1e1e1e;
     color: #eeeeee;
 }
 
 .file-edit-container .body{
-    background-color: #333333;
+    background-color: #1e1e1e;
 }
