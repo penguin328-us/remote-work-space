@@ -1,7 +1,14 @@
 body{
     background-color: #333333;
+    color: #dddddd;
+    font-family: Tahoma, Arial;
 }
 
 .splitter .handlerbar{
     background-color: #555555;
+}
+
+svg.loading path,
+svg.loading rect{
+    fill: white;
 }

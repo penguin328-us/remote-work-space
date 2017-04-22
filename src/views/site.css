@@ -21,3 +21,39 @@ body,
     cursor: row-resize;
 }
 
+.fileExplorer{
+    vertical-align: top;
+    overflow: auto;
+    height: 100%;
+}
+
+.fileExplorer h4{
+    padding-left: 15px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.expandIcon{
+    font-size: 14px;
+    vertical-align: bottom;
+    padding-bottom: 1px;
+}
+
+.treeItem{
+    list-style: none;
+    padding-left: 8px;
+    padding-top: 5px;
+    cursor:pointer;
+}
+
+.treeItem li{
+    font-size:14px;
+    padding-bottom: 5px;
+    text-overflow: clip;
+    white-space: nowrap;
+}
+
+.treeItem li.file{
+    padding-left: 14px;
+}
+
