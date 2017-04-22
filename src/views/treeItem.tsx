@@ -32,7 +32,7 @@ export class TreeItem extends React.Component<ITreeItemProperty, ITreeItemState>
                     return 1;
                 }
             }).map(f => {
-                return (<TreeItem file={f} />)
+                return (<TreeItem key={f.path} file={f} />)
             }) : [];
         const content = children.length > 0 ?
             (<ul className="tree-item">{children}</ul>) : null;

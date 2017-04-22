@@ -22,6 +22,7 @@ export class FileEditContainer extends React.Component<any, IFileEditState>{
         this.onOpendFilesChanged = this.onOpendFilesChanged.bind(this);
         this.onActiveFileChanged = this.onActiveFileChanged.bind(this);
         this.onClickItem = this.onClickItem.bind(this);
+        this.onCloseItem = this.onCloseItem.bind(this);
     }
 
     componentDidMount():void{
@@ -38,11 +39,17 @@ export class FileEditContainer extends React.Component<any, IFileEditState>{
         const headers = this.state.opendFiles.map(f => {
             const className = f.path === this.state.activeFile ?
                 "item active" : "item";
-            return (<div className={className} key={f.path} onClick={() => this.onClickItem(f.path)}>{f.name}</div>)
+            return (
+                <div className={className} key={f.path} onClick={() => this.onClickItem(f.path)}>
+                    <span>{f.name}</span>
+                    <span className="close" onClick={(e)=>this.onCloseItem(e,f)}>
+                        <i className="material-icons">close</i>
+                    </span>
+                </div>)
         });
 
         const editors = this.state.opendFiles.map(f => {
-            return (<FileEditor file={f} />)
+            return (<FileEditor key={f.path} file={f} />)
         });
         return (
             <div className="file-edit-container">
@@ -68,5 +75,11 @@ export class FileEditContainer extends React.Component<any, IFileEditState>{
 
     private onClickItem(path:string):void{
         FileEditHelper.setActiveFile(path);
+    }
+
+    private onCloseItem(event: React.MouseEvent<HTMLSpanElement>, file: File): void {
+        event.stopPropagation();
+        event.preventDefault();
+        FileEditHelper.closeFile(file);
     }
 }

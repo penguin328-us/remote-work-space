@@ -30,6 +30,11 @@ svg.loading rect{
     color: #eeeeee;
 }
 
+.file-edit-container .header .item .close:hover{
+    background-color: red;
+    color:black;
+}
+
 .file-edit-container .body{
     background-color: #1e1e1e;
 }

@@ -33,7 +33,7 @@ export class FileExplorer extends React.Component<any, IFileExplorerState>{
         const content = this.state.loading ?
             (<Loading size={30} />) : (
                 <ul className="tree-item">
-                    <TreeItem file={this.rootFolder} />
+                    <TreeItem key={this.rootFolder.path} file={this.rootFolder} />
                 </ul>
             );
 

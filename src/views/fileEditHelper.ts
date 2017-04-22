@@ -6,7 +6,7 @@ let openedFiles: File[] = [];
 const openedFilesChangeEvent = new Event<File[]>();
 export const OpenedFilesChangeEvent: IEvent<File[]> = openedFilesChangeEvent;
 
-let activeFile:string = null;
+let activeFile: string = null;
 const activeFileChangeEvent = new Event<string>();
 export const ActiveFileChangeEvent: IEvent<string> = activeFileChangeEvent;
 
@@ -33,16 +33,20 @@ export function closeFile(file: File): void {
     if (index >= 0) {
         openedFiles.splice(index, 1);
         openedFilesChangeEvent.trigger(openedFiles);
+
+        if (file.path === activeFile) {
+            setActiveFile(openedFiles.length > 0 ? openedFiles[0].path : null);
+        }
     }
 }
 
-export function setActiveFile(filePath:string){
-    if(activeFile !== filePath){
+export function setActiveFile(filePath: string) {
+    if (activeFile !== filePath) {
         activeFile = filePath;
         activeFileChangeEvent.trigger(activeFile);
     }
 }
 
-export function getActiveFile():string{
+export function getActiveFile(): string {
     return activeFile;
 }

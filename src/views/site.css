@@ -90,6 +90,15 @@ body,
     min-width: 50px;
 }
 
+.file-edit-container .header .item .close{
+    margin-left: 10px;
+}
+
+.file-edit-container .header .item .close .material-icons{
+    font-size: 14px;
+    vertical-align: bottom;
+}
+
 .file-edit-container .body{
     position: absolute;
     top:35px;

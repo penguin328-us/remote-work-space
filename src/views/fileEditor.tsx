@@ -49,7 +49,7 @@ export class FileEditor extends React.Component<IFileEditorProperty, IFileEditor
                 <div className="file-editor" style={{
                     display: this.state.active ? "block" : "none"
                 }}>
-                    <MonacoEditor value={this.state.fileContent} language={this.getLanguage()} />
+                    <MonacoEditor key={this.props.file.path} value={this.state.fileContent} language={this.getLanguage()} />
                 </div>
             );
     }
