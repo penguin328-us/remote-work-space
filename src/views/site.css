@@ -92,6 +92,7 @@ body,
 
 .file-edit-container .header .item .close{
     margin-left: 10px;
+    border-radius: 40%;
 }
 
 .file-edit-container .header .item .close .material-icons{
