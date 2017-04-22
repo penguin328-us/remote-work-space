@@ -13,6 +13,23 @@ svg.loading rect{
     fill: white;
 }
 
-.treeItem .text:hover{
+.tree-item .text:hover{
     background-color: #444444;
+}
+
+.file-edit .header{
+    background-color: #444444;
+}
+
+.file-edit .header .item{
+    background-color: #555555;
+}
+
+.file-edit .header .active{
+    background-color: #333333;
+    color: #eeeeee;
+}
+
+.file-edit .body{
+    background-color: #333333;
 }

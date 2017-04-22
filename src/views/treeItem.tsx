@@ -2,6 +2,7 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 
 import { FileType, File, Folder, FileServiceNameSpace, BaseFileItem } from "../services/file/fileDefinition"
+import * as FileEditHelper from "./fileEditHelper";
 
 interface ITreeItemProperty {
     file: BaseFileItem,
@@ -18,6 +19,7 @@ export class TreeItem extends React.Component<ITreeItemProperty, ITreeItemState>
             expand: false
         }
         this.onToggleExpand = this.onToggleExpand.bind(this);
+        this.onOpenFile = this.onOpenFile.bind(this);
     }
 
     render() {
@@ -33,16 +35,18 @@ export class TreeItem extends React.Component<ITreeItemProperty, ITreeItemState>
                 return (<TreeItem file={f} />)
             }) : [];
         const content = children.length > 0 ?
-            (<ul className="treeItem">{children}</ul>) : null;
+            (<ul className="tree-item">{children}</ul>) : null;
         const expandIcon = this.props.file.type === FileType.Folder ?
-            (<i className="material-icons expandIcon" onClick={this.onToggleExpand}>
+            (<i className="material-icons">
                 {this.state.expand ? "keyboard_arrow_down" : "keyboard_arrow_right"}
             </i>) : null
         const className = this.props.file.type === FileType.Folder ? "folder" : "file";
+        const fileIcon = this.getFileIcon();
         return (
             <li className={className}>
-                <div className="text">
+                <div className="text" onClick={this.onToggleExpand} onDoubleClick={this.onOpenFile}>
                     {expandIcon}
+                    {fileIcon}
                     <span>{this.props.file.name}</span>
                 </div>
                 {content}
@@ -50,9 +54,23 @@ export class TreeItem extends React.Component<ITreeItemProperty, ITreeItemState>
         )
     }
 
+    getFileIcon(): any {
+        const iconName = this.props.file.type === FileType.Folder ?
+            "folder" : "description";
+        return (<i className="material-icons">{iconName}</i>);
+    }
+
     onToggleExpand() {
-        this.setState({
-            expand: !this.state.expand
-        })
+        if (this.props.file.type === FileType.Folder) {
+            this.setState({
+                expand: !this.state.expand
+            })
+        }
+    }
+
+    onOpenFile() {
+        if (this.props.file.type === FileType.File) {
+            FileEditHelper.openFile(this.props.file as File);
+        }
     }
 }

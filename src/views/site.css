@@ -21,42 +21,80 @@ body,
     cursor: row-resize;
 }
 
-.fileExplorer{
+.file-explorer{
     vertical-align: top;
     overflow: auto;
     height: 100%;
 }
 
-.fileExplorer h4{
+.file-explorer h4{
     padding-left: 15px;
     margin-top: 10px;
     margin-bottom: 10px;
 }
 
-.expandIcon{
-    font-size: 14px;
-    vertical-align: bottom;
-    padding-bottom: 1px;
-}
-
-.treeItem{
+.tree-item{
     list-style: none;
     cursor:pointer;
     padding-left: 8px;
 }
 
-.treeItem .text{
+.tree-item .material-icons{
+    font-size: 14px;
+    vertical-align: bottom;
+    padding-bottom: 1px;
+}
+
+.tree-item .text{
     padding-top: 5px;
     padding-bottom: 5px;
 }
 
-.treeItem li{
+.tree-item .text span{
+    padding-left: 2px;
+}
+
+.tree-item li{
     font-size:14px;
     text-overflow: clip;
     white-space: nowrap;
 }
 
-.treeItem li.file .text{
+.tree-item li.file .text{
     padding-left: 14px;
+}
+
+.file-edit{
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.file-edit .header{
+    position: absolute;
+    top:0px;
+    bottom: 40px;
+    left: 0px;
+    right: 0px;
+    font-size: 14px;
+}
+
+.file-edit .header .item{
+    display: inline-block;
+    margin-right: 2px;
+    height: 100%;
+    cursor: pointer;
+    vertical-align: middle;
+    line-height: 100%;
+    padding: 10px;
+    min-width: 50px;
+}
+
+.file-edit .body{
+    position: absolute;
+    top:40px;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
 }
 
