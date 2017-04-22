@@ -17,19 +17,19 @@ svg.loading rect{
     background-color: #444444;
 }
 
-.file-edit .header{
+.file-edit-container .header{
     background-color: #444444;
 }
 
-.file-edit .header .item{
+.file-edit-container .header .item{
     background-color: #555555;
 }
 
-.file-edit .header .active{
+.file-edit-container .header .active{
     background-color: #333333;
     color: #eeeeee;
 }
 
-.file-edit .body{
+.file-edit-container .body{
     background-color: #333333;
 }

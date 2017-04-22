@@ -5,7 +5,7 @@ import * as FileClient from "../services/file/fileClient";
 import { FileType, File, Folder, FileServiceNameSpace } from "../services/file/fileDefinition"
 import * as FileEditHelper from "./fileEditHelper";
 
-import { Loading } from "./loading";
+import { FileEditor } from "./fileEditor";
 
 interface IFileEditState{
     opendFiles:File[];
@@ -41,9 +41,11 @@ export class FileEditContainer extends React.Component<any, IFileEditState>{
             return (<div className={className} key={f.path} onClick={()=>this.onClickItem(f.path)}>{f.name}</div>)
         });
         return (
-            <div className="file-edit">
+            <div className="file-edit-container">
                 <div className="header">{headers}</div>
-                <div className="body"></div>
+                <div className="body">
+                    <FileEditor />
+                </div>
             </div>
         );
     }

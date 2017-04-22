@@ -64,13 +64,13 @@ body,
     padding-left: 14px;
 }
 
-.file-edit{
+.file-edit-container{
     position: relative;
     width: 100%;
     height: 100%;
 }
 
-.file-edit .header{
+.file-edit-container .header{
     position: absolute;
     top:0px;
     bottom: 40px;
@@ -79,7 +79,7 @@ body,
     font-size: 14px;
 }
 
-.file-edit .header .item{
+.file-edit-container .header .item{
     display: inline-block;
     margin-right: 2px;
     height: 100%;
@@ -90,11 +90,15 @@ body,
     min-width: 50px;
 }
 
-.file-edit .body{
+.file-edit-container .body{
     position: absolute;
     top:40px;
     bottom: 0px;
     left: 0px;
     right: 0px;
+}
+
+.file-editor{
+    height: 100%;
 }
 

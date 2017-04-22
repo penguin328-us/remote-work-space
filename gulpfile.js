@@ -22,6 +22,11 @@ gulp.task("copy-html", function () {
         .pipe(gulp.dest(`${dest}/client`));
 });
 
+gulp.task("copy-monaco", function(){
+    return gulp.src("node_modules/monaco-editor/**/*.*")
+        .pipe(gulp.dest(`${dest}/client/monaco-editor`));
+});
+
 gulp.task("browserify", ["compile-ts"], function () {
     return browserify(`${dest}/views/index.js`)
         .bundle()
@@ -33,7 +38,7 @@ gulp.task("browserify", ["compile-ts"], function () {
         .pipe(gulp.dest(`${dest}/client`));
 });
 
-gulp.task("default", ["copy-html", "browserify"]);
+gulp.task("default", ["copy-html", "browserify", "copy-monaco"]);
 
 gulp.task("dev", ["default"], function () {
     gulp.watch(`${src}/**/*.{ts,tsx}`, ["browserify"]);
