@@ -7,3 +7,7 @@ export function getFolderStructure(){
 export function readFile(path:string){
     return fetch(`${FileServiceNameSpace}/readFile?path=${path}`);
 }
+
+export function readdir(path:string){
+    return fetch(`${FileServiceNameSpace}/readdir?path=${path}`);
+}

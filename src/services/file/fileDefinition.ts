@@ -25,4 +25,4 @@ export class File extends BaseFileItem {
     }
 }
 
-export const FileServiceNameSpace: string = "/fileService";
+export const FileServiceNameSpace: string = "/file";
