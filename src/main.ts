@@ -3,6 +3,7 @@ import * as path from "path";
 import * as express from "express";
 
 import * as FileService from "./services/file/fileService"
+import * as TerminalService from "./services/terminal/terminalService";
 
 const app: express.Express = express();
 const server = http.createServer(app);
@@ -15,3 +16,4 @@ server.listen(process.env.PORT || 8080, process.env.IP || "0.0.0.0", () => {
 });
 
 FileService.start(app);
+TerminalService.start(app);

@@ -18,7 +18,10 @@ gulp.task("compile-ts", function () {
 });
 
 gulp.task("copy-html", function () {
-    return gulp.src(`${src}/views/**/*.{html,css}`)
+    return gulp.src([
+        `${src}/views/**/*.{html,css}`,
+        `node_modules/xterm/dist/xterm.css`
+    ])
         .pipe(gulp.dest(`${dest}/client`));
 });
 
