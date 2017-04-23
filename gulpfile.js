@@ -18,16 +18,18 @@ gulp.task("compile-ts", function () {
 });
 
 gulp.task("copy-html", function () {
-    return gulp.src([
-        `${src}/views/**/*.{html,css}`,
-        `node_modules/xterm/dist/xterm.css`
-    ])
+    return gulp.src(`${src}/views/**/*.{html,css}`)
         .pipe(gulp.dest(`${dest}/client`));
 });
 
 gulp.task("copy-monaco", function(){
     return gulp.src("node_modules/monaco-editor/**/*.*")
         .pipe(gulp.dest(`${dest}/client/monaco-editor`));
+});
+
+gulp.task("copy-xTerm", function(){
+    return gulp.src("node_modules/xterm/**/*.*")
+        .pipe(gulp.dest(`${dest}/client/xterm`));
 });
 
 gulp.task("browserify", ["compile-ts"], function () {
@@ -41,7 +43,7 @@ gulp.task("browserify", ["compile-ts"], function () {
         .pipe(gulp.dest(`${dest}/client`));
 });
 
-gulp.task("default", ["copy-html", "browserify", "copy-monaco"]);
+gulp.task("default", ["copy-html", "browserify", "copy-monaco", "copy-xTerm"]);
 
 gulp.task("dev", ["default"], function () {
     gulp.watch(`${src}/**/*.{ts,tsx}`, ["browserify"]);

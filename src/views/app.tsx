@@ -3,12 +3,12 @@ import * as ReactDOM from 'react-dom';
 import { Splitter, SplitterPanePrimary } from "./controls/splitter";
 import { FileExplorer } from "./fileExplorer"
 import { FileEditContainer } from "./fileEditContainer";
-import { Terminal } from "./terminal";
+import { WebTerm } from "./webTerm";
 
 export class App extends React.Component<any, any> {
     render() {
         const fileEdit = (<FileEditContainer></FileEditContainer>);
-        const misc = (<Terminal />);
+        const misc = (<WebTerm />);
 
         const fileExplorer = (<FileExplorer></FileExplorer>);
         const workSpace = (<Splitter firstPane={fileEdit} secondPane={misc} defaultWidth={200} primay={SplitterPanePrimary.Second} vertical={true} />);

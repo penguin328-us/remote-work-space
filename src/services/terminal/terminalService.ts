@@ -1,12 +1,9 @@
 import * as express from "express";
 import * as pty from "node-pty";
-import * as os from "os";
 
 let terminals: any = {};
 let logs: any = {};
 export function start(app: express.Express): void {
-    require("express-ws")(app);
-
     app.post('/terminals', function (req, res) {
         var cols = parseInt(req.query.cols),
             rows = parseInt(req.query.rows),

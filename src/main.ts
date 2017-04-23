@@ -8,6 +8,8 @@ import * as TerminalService from "./services/terminal/terminalService";
 const app: express.Express = express();
 const server = http.createServer(app);
 
+const expressWs = require("express-ws")(app, server);
+
 app.use(express.static(path.resolve(__dirname, "client")));
 
 server.listen(process.env.PORT || 8080, process.env.IP || "0.0.0.0", () => {
