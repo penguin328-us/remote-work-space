@@ -171,5 +171,6 @@ export class Splitter extends React.Component<ISplitterProperty, ISplitterState>
     onWindowMouseUp(e: MouseEvent): void {
         window.removeEventListener("mousemove", this.onWindowMouseMove);
         window.removeEventListener("mouseup", this.onWindowMouseUp);
+        window.dispatchEvent(new Event("resize"));
     }
 }

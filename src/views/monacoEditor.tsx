@@ -14,13 +14,14 @@ export class MonacoEditor extends React.Component<IMonacoEditorProperty, any>{
 
     constructor(props: any) {
         super(props);
+        this.onResize = this.onResize.bind(this);
     }
     componentDidMount(): void {
-        const require :any = (window as any)['require'];
+        const require: any = (window as any)['require'];
         // Monaco requires the AMD module loader to be present on the page. It is not yet
         // compatible with ES6 imports. Once that happens, we can get rid of this.
         // See https://github.com/Microsoft/monaco-editor/issues/18
-        require.config({ paths: { 'vs': 'monaco-editor/min/vs' }});
+        require.config({ paths: { 'vs': 'monaco-editor/min/vs' } });
         require(['vs/editor/editor.main'], () => {
             this.editor = monaco.editor.create(this.refs['editor'] as HTMLDivElement, {
                 value: this.props.value,
@@ -34,12 +35,15 @@ export class MonacoEditor extends React.Component<IMonacoEditorProperty, any>{
                 }
             });
         });
+        window.addEventListener("resize", this.onResize);
     }
 
     componentWillUnmount(): void {
         if (this.editor) {
             this.editor.dispose();
+            this.editor = undefined;
         }
+        window.removeEventListener("resize", this.onResize);
     }
 
     componentDidUpdate(prevProps: IMonacoEditorProperty) {
@@ -57,5 +61,11 @@ export class MonacoEditor extends React.Component<IMonacoEditorProperty, any>{
             <div className="file-editor" ref="editor">
             </div>
         );
+    }
+
+    onResize(): void {
+        if (this.editor) {
+            this.editor.layout();
+        }
     }
 }
