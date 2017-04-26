@@ -1,5 +1,5 @@
 import * as express from "express";
-import * as pty from "node-pty";
+const pty = require("node-pty");
 
 let terminals: any = {};
 let logs: any = {};
