@@ -4,6 +4,7 @@ import * as ReactDOM from 'react-dom';
 import { FileType, File, Folder, FileServiceNameSpace, BaseFileItem } from "../services/file/fileDefinition"
 import * as FileClient from "../services/file/fileClient";
 import * as FileEditHelper from "./fileEditHelper";
+import * as $ from "jquery";
 import { Loading } from "./loading";
 import { Menu, MenuItem, MenuDivider } from "./controls/menu";
 
@@ -112,6 +113,14 @@ export class TreeItem extends React.Component<ITreeItemProperty, ITreeItemState>
             contextMenuBottom: undefined,
             contextMenuRight: undefined
         });
+        
+
+        $("body").one("mousedown", (() => {
+            this.setState({
+                showContextMenu: false
+            });
+        }).bind(this));
+
         return false;
     }
 
