@@ -115,3 +115,31 @@ body,
 .terminal{
     height: 100%;
 }
+
+.popup{
+    position: fixed;
+    border-width: 1px;
+    border-style:solid;
+    display: none;
+    z-index: 200;
+}
+
+.menu{
+    list-style: none;
+    padding: 0px;
+    min-width: 200px;
+}
+
+.menu li{
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.menu-item{
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+.menu-divider hr{
+    border-top: none;
+}

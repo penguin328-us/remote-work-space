@@ -38,3 +38,24 @@ svg.loading rect{
 .file-edit-container .body{
     background-color: #1e1e1e;
 }
+
+.popup{
+    border-color: #111111;
+    background-color: #1e1e1e;
+    box-shadow: 2px 2px 2px 1px black;
+    color: #dddddd;
+}
+
+.menu{
+    color:#bbbbbb;
+    background-color: #2d2f31;
+}
+
+.menu-item:hover{
+    background-color: #333333;
+}
+
+.menu-divider hr{
+    border-color: #bbbbbb;
+    color: #bbbbbb;
+}

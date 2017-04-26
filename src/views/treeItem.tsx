@@ -5,6 +5,7 @@ import { FileType, File, Folder, FileServiceNameSpace, BaseFileItem } from "../s
 import * as FileClient from "../services/file/fileClient";
 import * as FileEditHelper from "./fileEditHelper";
 import { Loading } from "./loading";
+import { Menu, MenuItem, MenuDivider } from "./controls/menu";
 
 interface ITreeItemProperty {
     file: BaseFileItem,
@@ -12,7 +13,12 @@ interface ITreeItemProperty {
 
 interface ITreeItemState {
     expand?: boolean,
-    loading: boolean
+    loading: boolean,
+    showContextMenu: boolean,
+    contextMenuTop?: number,
+    contextMenuLeft?: number,
+    contextMenuBottom?: number,
+    contextMenuRight?: number,
 }
 
 export class TreeItem extends React.Component<ITreeItemProperty, ITreeItemState>{
@@ -21,10 +27,12 @@ export class TreeItem extends React.Component<ITreeItemProperty, ITreeItemState>
         super(props);
         this.state = {
             expand: false,
-            loading: false
+            loading: false,
+            showContextMenu: false,
         }
         this.onToggleExpand = this.onToggleExpand.bind(this);
         this.onOpenFile = this.onOpenFile.bind(this);
+        this.onContextMenu = this.onContextMenu.bind(this);
     }
 
     render() {
@@ -53,11 +61,19 @@ export class TreeItem extends React.Component<ITreeItemProperty, ITreeItemState>
 
         return (
             <li className={className}>
-                <div className="text" onClick={this.onToggleExpand} onDoubleClick={this.onOpenFile}>
+                <div className="text" onClick={this.onToggleExpand} onDoubleClick={this.onOpenFile} onContextMenu={this.onContextMenu}>
                     {expandIcon}
                     {fileIcon}
                     <span>{this.props.file.name}</span>
                 </div>
+                <Menu show={this.state.showContextMenu} top={this.state.contextMenuTop} left={this.state.contextMenuLeft}
+                        bottom={this.state.contextMenuBottom} right={this.state.contextMenuRight}>
+                    <MenuItem>Rename</MenuItem>
+                    <MenuItem>Delete</MenuItem>
+                    <MenuDivider />
+                    <MenuItem>Action 1</MenuItem>
+                    <MenuItem>Action 2</MenuItem>
+                </Menu>
                 {content}
             </li>
         )
@@ -84,6 +100,19 @@ export class TreeItem extends React.Component<ITreeItemProperty, ITreeItemState>
                 this.loadChildren();
             }
         }
+    }
+
+    onContextMenu(event: React.MouseEvent<HTMLDivElement>): boolean {
+        event.preventDefault();
+        event.stopPropagation();
+        this.setState({
+            showContextMenu: true,
+            contextMenuLeft: event.pageX + 10,
+            contextMenuTop: event.pageY + 10,
+            contextMenuBottom: undefined,
+            contextMenuRight: undefined
+        });
+        return false;
     }
 
     loadChildren(): void {
