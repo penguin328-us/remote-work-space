@@ -36,7 +36,7 @@ export class FileExplorer extends React.Component<any, IFileExplorerState>{
                 <ul className="tree-item">
                     {
                         this.roots.map(r => {
-                            return (<TreeItem key={r.path} file={r} />);
+                            return (<TreeItem key={r.path} file={r} expand={true} />);
                         })
                     }
                 </ul>

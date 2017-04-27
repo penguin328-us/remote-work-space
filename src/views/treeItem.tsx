@@ -10,6 +10,7 @@ import { Menu, MenuItem, MenuDivider } from "./controls/menu";
 
 interface ITreeItemProperty {
     file: BaseFileItem,
+    expand?: boolean,
 }
 
 interface ITreeItemState {
@@ -34,6 +35,10 @@ export class TreeItem extends React.Component<ITreeItemProperty, ITreeItemState>
         this.onToggleExpand = this.onToggleExpand.bind(this);
         this.onOpenFile = this.onOpenFile.bind(this);
         this.onContextMenu = this.onContextMenu.bind(this);
+
+        if(this.props.expand){
+            this.onToggleExpand();
+        }
     }
 
     render() {

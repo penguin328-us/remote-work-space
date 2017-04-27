@@ -27,9 +27,16 @@ interface ISize {
     height: number;
 }
 
+interface ILayout {
+    top: number;
+    left: number;
+    width: any;
+    height: any;
+}
+
 interface ISplitterState {
-    firstPane: IPosition;
-    handlerbar: IPosition;
+    firstPane: ILayout;
+    handlerbar: ILayout;
     secondPane: IPosition;
 }
 
@@ -45,9 +52,15 @@ export class Splitter extends React.Component<ISplitterProperty, ISplitterState>
             bottom: 0,
             right: 0,
         };
+        const zeroLayout: ILayout = {
+            top: 0,
+            left: 0,
+            width: 0,
+            height: 0,
+        }
         this.state = {
-            firstPane: zeroPosition,
-            handlerbar: zeroPosition,
+            firstPane: zeroLayout,
+            handlerbar: zeroLayout,
             secondPane: zeroPosition,
         };
         this.onMouseDownn = this.onMouseDownn.bind(this);
@@ -88,14 +101,14 @@ export class Splitter extends React.Component<ISplitterProperty, ISplitterState>
                 firstPane: {
                     top: 0,
                     left: 0,
-                    right: this.props.vertical ? 0 : maxWidth - width,
-                    bottom: this.props.vertical ? maxWidth - width : 0
+                    width: this.props.vertical ? "100%" : width,
+                    height: this.props.vertical ? width : "100%"
                 },
                 handlerbar: {
                     top: this.props.vertical ? width : 0,
                     left: this.props.vertical ? 0 : width,
-                    right: this.props.vertical ? 0 : maxWidth - width - handlerbarWidth,
-                    bottom: this.props.vertical ? maxWidth - width - handlerbarWidth : 0
+                    width: this.props.vertical ? "100%" : handlerbarWidth,
+                    height: this.props.vertical ? handlerbarWidth : "100%"
                 },
                 secondPane: {
                     top: this.props.vertical ? width + handlerbarWidth : 0,
@@ -124,17 +137,17 @@ export class Splitter extends React.Component<ISplitterProperty, ISplitterState>
                     position: "absolute",
                     top: this.state.firstPane.top,
                     left: this.state.firstPane.left,
-                    bottom: this.state.firstPane.bottom,
-                    right: this.state.firstPane.right
-                }}>
+                    width: this.state.firstPane.width,
+                    height: this.state.firstPane.height
+                }} className="firstPane">
                     {this.props.firstPane}
                 </div>
                 <div className="handlerbar" style={{
                     position: "absolute",
                     top: this.state.handlerbar.top,
                     left: this.state.handlerbar.left,
-                    bottom: this.state.handlerbar.bottom,
-                    right: this.state.handlerbar.right
+                    width: this.state.handlerbar.width,
+                    height: this.state.handlerbar.height
                 }} onMouseDown={this.onMouseDownn}></div>
                 <div style={{
                     position: "absolute",
@@ -142,7 +155,7 @@ export class Splitter extends React.Component<ISplitterProperty, ISplitterState>
                     left: this.state.secondPane.left,
                     bottom: this.state.secondPane.bottom,
                     right: this.state.secondPane.right
-                }}>
+                }} className="secondPane">
                     {this.props.secondPane}
                 </div>
             </div>
