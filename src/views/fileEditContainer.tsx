@@ -1,14 +1,14 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 
-import * as FileClient from "../services/file/fileClient";
+import { ClientFile } from "../services/file/clientFile";
 import { FileType, File, Folder, FileServiceNameSpace } from "../services/file/fileDefinition"
 import * as FileEditHelper from "./fileEditHelper";
 
 import { FileEditor } from "./fileEditor";
 
 interface IFileEditState{
-    opendFiles:File[];
+    opendFiles:ClientFile[];
     activeFile:string;
 }
 
@@ -37,19 +37,19 @@ export class FileEditContainer extends React.Component<any, IFileEditState>{
 
     render() {
         const headers = this.state.opendFiles.map(f => {
-            const className = f.path === this.state.activeFile ?
+            const className = f.file.path === this.state.activeFile ?
                 "item active" : "item";
             return (
-                <div className={className} key={f.path} onClick={() => this.onClickItem(f.path)}>
-                    <span>{f.name}</span>
-                    <span className="close" onClick={(e)=>this.onCloseItem(e,f)}>
+                <div className={className} key={f.file.path} onClick={() => this.onClickItem(f.file.path)}>
+                    <span>{f.file.name}</span>
+                    <span className="close" onClick={(e)=>this.onCloseItem(e,f.file)}>
                         <i className="material-icons">close</i>
                     </span>
                 </div>)
         });
 
         const editors = this.state.opendFiles.map(f => {
-            return (<FileEditor key={f.path} file={f} />)
+            return (<FileEditor key={f.file.path} clientFile={f} />)
         });
         return (
             <div className="file-edit-container">
@@ -61,7 +61,7 @@ export class FileEditContainer extends React.Component<any, IFileEditState>{
         );
     }
 
-    private onOpendFilesChanged(opendFiles: File[]): void {
+    private onOpendFilesChanged(opendFiles: ClientFile[]): void {
         this.setState({
             opendFiles:opendFiles
         });

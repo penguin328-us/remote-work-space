@@ -1,5 +1,6 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
+import{ IPosition, ILayout, ISize} from "../common/layout";
 
 export enum SplitterPanePrimary {
     First,
@@ -13,25 +14,6 @@ export interface ISplitterProperty {
     primay?: SplitterPanePrimary;
     firstPane: any;
     secondPane: any;
-}
-
-interface IPosition {
-    top: number;
-    left: number;
-    bottom: number;
-    right: number;
-}
-
-interface ISize {
-    width: number;
-    height: number;
-}
-
-interface ILayout {
-    top: number;
-    left: number;
-    width: any;
-    height: any;
 }
 
 interface ISplitterState {

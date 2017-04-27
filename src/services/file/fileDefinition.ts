@@ -10,7 +10,6 @@ export class BaseFileItem {
 }
 
 export class Folder extends BaseFileItem {
-    public children: BaseFileItem[] = [];
     constructor() {
         super();
         this.type = FileType.Folder;

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 
-import * as FileClient from "../services/file/fileClient";
+import { ClientFile } from "../services/file/clientFile";
 import { FileType, File, Folder, FileServiceNameSpace } from "../services/file/fileDefinition"
 
 import { Loading } from "./loading";
@@ -9,8 +9,8 @@ import * as FileEditHelper from "./fileEditHelper";
 
 import { MonacoEditor } from "./monacoEditor";
 
-interface IFileEditorProperty{
-    file:File
+interface IFileEditorProperty {
+    clientFile: ClientFile
 }
 
 interface IFileEditorState{
@@ -25,13 +25,11 @@ export class FileEditor extends React.Component<IFileEditorProperty, IFileEditor
         this.state ={
             loading:true,
             fileContent:null,
-            active:this.props.file.path === FileEditHelper.getActiveFile()
+            active:this.props.clientFile.file.path === FileEditHelper.getActiveFile()
         }
         this.onActiveFileChanged = this.onActiveFileChanged.bind(this);
-        FileClient.readFile(this.props.file.path).then((res)=>{
-            res.blob().then(b=>{
-                this.loadFile(b);
-            });
+        this.props.clientFile.read(content=>{
+            this.loadFile(content);
         });
     }
     componentDidMount(): void {
@@ -49,13 +47,13 @@ export class FileEditor extends React.Component<IFileEditorProperty, IFileEditor
                 <div className="file-editor" style={{
                     display: this.state.active ? "block" : "none"
                 }}>
-                    <MonacoEditor key={this.props.file.path} value={this.state.fileContent} language={this.getLanguage()} />
+                    <MonacoEditor key={this.props.clientFile.file.path} value={this.state.fileContent} language={this.getLanguage()} />
                 </div>
             );
     }
 
     onActiveFileChanged(activeFile: string): void {
-        if(activeFile === this.props.file.path){
+        if(activeFile === this.props.clientFile.file.path){
             this.setState({
                 active:true
             });
@@ -78,7 +76,7 @@ export class FileEditor extends React.Component<IFileEditorProperty, IFileEditor
     }
 
     getLanguage(): string {
-        switch (this.props.file.extension) {
+        switch (this.props.clientFile.file.extension) {
             case ".ts":
                 return "typescript";
             case ".js":

@@ -1,29 +1,27 @@
-import * as FileClient from "../services/file/fileClient";
+import { ClientFile } from "../services/file/clientFile";
 import { FileType, File, Folder, FileServiceNameSpace } from "../services/file/fileDefinition"
 import { IEvent, Event } from "../common/event";
 
-let openedFiles: File[] = [];
-const openedFilesChangeEvent = new Event<File[]>();
-export const OpenedFilesChangeEvent: IEvent<File[]> = openedFilesChangeEvent;
+let openedFiles: ClientFile[] = [];
+export const OpenedFilesChangeEvent: IEvent<ClientFile[]> = new Event<ClientFile[]>();
 
 let activeFile: string = null;
-const activeFileChangeEvent = new Event<string>();
-export const ActiveFileChangeEvent: IEvent<string> = activeFileChangeEvent;
+export const ActiveFileChangeEvent: IEvent<string> = new Event<string>();
 
 function getFileIndex(file: File): number {
     for (let i = 0; i < openedFiles.length; i++) {
-        if (file.path === openedFiles[i].path) {
+        if (file.path === openedFiles[i].file.path) {
             return i;
         }
     }
     return -1;
 }
 
-export function openFile(file: File): void {
+export function openFile(file: File, fileContent?: Blob): void {
     const index = getFileIndex(file);
     if (index < 0) {
-        openedFiles.push(file);
-        openedFilesChangeEvent.trigger(openedFiles);
+        openedFiles.push(new ClientFile(file, fileContent));
+        (OpenedFilesChangeEvent as Event<ClientFile[]>).trigger(openedFiles);
     }
     setActiveFile(file.path);
 }
@@ -32,10 +30,10 @@ export function closeFile(file: File): void {
     const index = getFileIndex(file);
     if (index >= 0) {
         openedFiles.splice(index, 1);
-        openedFilesChangeEvent.trigger(openedFiles);
+        (OpenedFilesChangeEvent as Event<ClientFile[]>).trigger(openedFiles);
 
         if (file.path === activeFile) {
-            setActiveFile(openedFiles.length > 0 ? openedFiles[0].path : null);
+            setActiveFile(openedFiles.length > 0 ? openedFiles[0].file.path : null);
         }
     }
 }
@@ -43,7 +41,7 @@ export function closeFile(file: File): void {
 export function setActiveFile(filePath: string) {
     if (activeFile !== filePath) {
         activeFile = filePath;
-        activeFileChangeEvent.trigger(activeFile);
+        (ActiveFileChangeEvent as Event<string>).trigger(activeFile);
     }
 }
 

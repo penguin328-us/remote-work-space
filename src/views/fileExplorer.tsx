@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 
-import * as FileClient from "../services/file/fileClient";
+import { ClientFolder } from "../services/file/clientFolder";
 import { FileType, File, Folder, FileServiceNameSpace, BaseFileItem } from "../services/file/fileDefinition"
 
 import { Loading } from "./loading";
@@ -13,20 +13,19 @@ interface IFileExplorerState {
 
 export class FileExplorer extends React.Component<any, IFileExplorerState>{
     private roots: BaseFileItem[];
+    private rootFolder = new ClientFolder("/");
 
     constructor(props: any) {
         super(props);
         this.state = {
             loading: true
         }
-        FileClient.readdir("/").then((res) => {
-            res.json().then((data) => {
-                this.roots = data;
-                this.setState({
-                    loading: false
-                })
+        this.rootFolder.read((children) => {
+            this.roots = children;
+            this.setState({
+                loading: false
             })
-        })
+        });
     }
 
     render() {
