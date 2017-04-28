@@ -1,29 +1,30 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 
-import { FileType, File, Folder, FileServiceNameSpace, BaseFileItem } from "../services/file/fileDefinition"
-import { ClientFolder } from "../services/file/clientFolder";
-import * as FileEditHelper from "./fileEditHelper";
+import { FileType, File, Folder, FileServiceNameSpace, BaseFileItem } from "../../services/file/fileDefinition"
+import { ClientFolder } from "../../services/file/clientFolder";
+import * as FileEditHelper from "../fileEditHelper";
 import * as $ from "jquery";
-import { Loading } from "./loading";
-import { Menu, MenuItem, MenuDivider } from "./controls/menu";
-import {IPosition} from "./common/layout";
+import { Loading } from "../loading";
+import { Menu, MenuItem, MenuDivider } from "../controls/menu";
+import { IPosition } from "../common/layout";
 
 interface ITreeItemProperty {
-    file: BaseFileItem,
-    expand?: boolean,
+    file: BaseFileItem;
+    expand?: boolean;
 }
 
 interface ITreeItemState {
-    expand?: boolean,
-    loading: boolean,
-    showContextMenu: boolean,
-    contextMenuPos: IPosition,
+    expand?: boolean;
+    loading: boolean;
+    showContextMenu: boolean;
+    contextMenuPos: IPosition;
+    rename?: boolean;
 }
 
 export class TreeItem extends React.Component<ITreeItemProperty, ITreeItemState>{
     private children: BaseFileItem[] = [];
-    private clientFolder:ClientFolder = undefined;
+    private clientFolder: ClientFolder = undefined;
     constructor(props: ITreeItemProperty) {
         super(props);
         this.state = {
@@ -35,17 +36,20 @@ export class TreeItem extends React.Component<ITreeItemProperty, ITreeItemState>
         this.onToggleExpand = this.onToggleExpand.bind(this);
         this.onOpenFile = this.onOpenFile.bind(this);
         this.onContextMenu = this.onContextMenu.bind(this);
-        if(this.props.file.type === FileType.Folder){
+        this.onRename = this.onRename.bind(this);
+        this.onRenameKeyPress = this.onRenameKeyPress.bind(this);
+        this.onRenameChange = this.onRenameChange.bind(this);
+        if (this.props.file.type === FileType.Folder) {
             this.clientFolder = new ClientFolder(this.props.file.path);
         }
 
-        if(this.props.expand && this.props.file.type === FileType.Folder){
+        if (this.props.expand && this.props.file.type === FileType.Folder) {
             this.onToggleExpand();
         }
     }
 
     render() {
-        return this.props.file.type === FileType.Folder ? this.renderFolder(): this.renderFile();
+        return this.props.file.type === FileType.Folder ? this.renderFolder() : this.renderFile();
     }
 
     //#region "Common Functions"
@@ -56,12 +60,12 @@ export class TreeItem extends React.Component<ITreeItemProperty, ITreeItemState>
         this.setState({
             showContextMenu: true,
             contextMenuPos: {
-                top:event.pageY,
-                left:event.pageX
+                top: event.pageY,
+                left: event.pageX
             }
         });
-        
-        $("body").one("mousedown", (() => {
+
+        $("body").one("mouseup", (() => {
             this.setState({
                 showContextMenu: false
             });
@@ -70,26 +74,60 @@ export class TreeItem extends React.Component<ITreeItemProperty, ITreeItemState>
         return false;
     }
 
+    onRename(): void {
+        this.setState({
+            rename: true
+        }, () => {
+            const textBox = this.refs["rename"] as HTMLInputElement;
+            $(textBox).val(this.props.file.name).focus();
+            if (this.props.file.type === FileType.Folder) {
+                textBox.setSelectionRange(0, this.props.file.name.length);
+            } else {
+                textBox.setSelectionRange(0, this.props.file.name.length - (this.props.file as File).extension.length);
+            }
+        });
+    }
+
+    onRenameKeyPress(event: React.KeyboardEvent<HTMLInputElement>): void {
+        if (event.which === 13) {
+            this.onRenameChange();
+        }
+    }
+
+    onRenameChange(): void {
+        const newName = $(this.refs["rename"]).val();
+        if (newName) {
+            this.props.file.name = newName;
+        }
+        this.setState({
+            rename: false
+        });
+    }
+
     //#endregion "Common Functions"
 
     //#region "File"
 
-    renderFile(){
-         return (
+    renderFile() {
+        return (
             <li className="file">
                 <div className="text" onDoubleClick={this.onOpenFile} onContextMenu={this.onContextMenu}>
                     <i className="material-icons">description</i>
-                    <span>{this.props.file.name}</span>
+                    {
+                        this.state.rename ?
+                            (<input type="text" className="rename" ref="rename" onBlur={this.onRenameChange} onKeyPress={this.onRenameKeyPress} />)
+                            : (<span>{this.props.file.name}</span>)
+                    }
                 </div>
                 <Menu show={this.state.showContextMenu} position={this.state.contextMenuPos}>
-                    <MenuItem>Rename File</MenuItem>
+                    <MenuItem onClick={this.onRename}>Rename File</MenuItem>
                     <MenuItem>Delete File</MenuItem>
                 </Menu>
             </li>
-         );
+        );
     }
 
-    onOpenFile() {
+    onOpenFile(event: React.MouseEvent<HTMLDivElement>): void {
         FileEditHelper.openFile(this.props.file as File);
     }
 
@@ -124,13 +162,17 @@ export class TreeItem extends React.Component<ITreeItemProperty, ITreeItemState>
                 <div className="text" onClick={this.onToggleExpand} onContextMenu={this.onContextMenu}>
                     {expandIcon}
                     {folderIcon}
-                    <span>{this.props.file.name}</span>
+                    {
+                        this.state.rename ?
+                            (<input type="text" className="rename" ref="rename" onBlur={this.onRenameChange} onKeyPress={this.onRenameKeyPress} />)
+                            : (<span>{this.props.file.name}</span>)
+                    }
                 </div>
                 <Menu show={this.state.showContextMenu} position={this.state.contextMenuPos}>
                     <MenuItem>New File</MenuItem>
                     <MenuItem>Upload File...</MenuItem>
                     <MenuDivider />
-                    <MenuItem>Rename Folder</MenuItem>
+                    <MenuItem onClick={this.onRename}>Rename Folder</MenuItem>
                     <MenuItem>Delete Folder</MenuItem>
                 </Menu>
                 {content}

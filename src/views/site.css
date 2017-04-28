@@ -59,6 +59,13 @@ body,
     padding-left: 2px;
 }
 
+.tree-item .text .rename{
+    width:120px;
+    outline-width: 0;
+    padding-left: 2px;
+    margin-bottom: -2px;
+}
+
 .tree-item li{
     font-size:14px;
     text-overflow: clip;

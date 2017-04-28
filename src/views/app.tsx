@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { Splitter, SplitterPanePrimary } from "./controls/splitter";
-import { FileExplorer } from "./fileExplorer"
+import { FileExplorer } from "./fileExplorer/fileExplorer"
 import { FileEditContainer } from "./fileEditContainer";
 import { WebTerm } from "./webTerm";
 

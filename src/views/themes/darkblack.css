@@ -17,6 +17,12 @@ svg.loading rect{
     background-color: #444444;
 }
 
+.tree-item .text .rename{
+    border: 1px solid #555555;
+    background-color: #333333;
+    color: #aaaaaa;
+}
+
 .file-edit-container .header{
     background-color: #333333;
 }

@@ -15,10 +15,14 @@ export class Menu extends React.Component<IPopupProperty, any>{
     }
 }
 
-export class MenuItem extends React.Component<any, any>{
+interface IMenuItemProperty {
+    onClick?: () => void;
+}
+
+export class MenuItem extends React.Component<IMenuItemProperty, any>{
     render() {
         return (
-            <li className="menu-item">{this.props.children}</li>
+            <li className="menu-item" onClick={this.props.onClick}>{this.props.children}</li>
         );
     }
 }
