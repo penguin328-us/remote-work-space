@@ -18,11 +18,12 @@ export function start(app: express.Express): void {
 }
 
 function initRestApi(app: express.Express): void {
-    app.get(`${FileServiceNameSpace}/readdir`, (req, res) => {
+    const router = express.Router();
+    router.get(`/readdir`, (req, res) => {
         if (req.query.path === "/") {
             res.send([root]);
         } else {
-            const dir = path.join(baseFolder, req.query.path);
+            const dir = getServerPath(req.query.path);
             fs.readdir(dir, (err, files) => {
                 let count = files.length;
                 const children: BaseFileItem[] = [];
@@ -30,24 +31,14 @@ function initRestApi(app: express.Express): void {
                     res.send(children);
                 } else {
                     files.forEach(f => {
-                        const fullPath = `${dir}/${f}`
-                        fs.stat(fullPath, (err, state) => {
-                            const pathInfo = path.parse(fullPath);
-                            if (state.isFile()) {
-                                const file = new File();
-                                file.extension = pathInfo.ext;
-                                file.name = pathInfo.base;
-                                file.path = pathInfo.dir.substr(baseFolder.length) + "/" + file.name;
-                                children.push(file);
-                            } else if (state.isDirectory()) {
-                                const folder = new Folder();
-                                folder.name = pathInfo.base;
-                                folder.path = pathInfo.dir.substr(baseFolder.length) + "/" + folder.name;
-                                children.push(folder);
+                        const fullPath = `${dir}/${f}`;
+                        convertToFileItem(fullPath, (fileItem) => {
+                            if (fileItem) {
+                                children.push(fileItem);
                             }
                             count--;
                             if (count === 0) {
-                                res.send(children);
+                                res.send(children.sort((a, b) => { return a.name.localeCompare(b.name); }));
                             }
                         });
                     });
@@ -56,14 +47,61 @@ function initRestApi(app: express.Express): void {
         }
     });
 
-    app.get(`${FileServiceNameSpace}/readFile`, (req, res) => {
-        const fullPath = path.join(baseFolder, req.query.path);
+    router.get(`/readFile`, (req, res) => {
+        const fullPath = getServerPath(req.query.path);
         fs.readFile(fullPath, (err, data) => {
             if (err) {
-                res.statusCode = 500;
-                res.send(err)
+                res.status(500).send(err.message)
+            } else {
+                res.send(data);
             }
-            res.send(data);
         });
+    });
+
+    router.post(`/rename`, (req, res) => {
+        const file = req.body.file as BaseFileItem;
+        const newName = req.body.newName as string;
+        const oldPath = getServerPath(file.path);
+        const parsedPath = path.parse(oldPath);
+        const newPath = path.join(parsedPath.dir, newName);
+        fs.rename(oldPath, newPath, (err) => {
+            if (err) {
+                res.status(500).send(err.message);
+            } else {
+                convertToFileItem(newPath, (fileItem) => {
+                    res.send(fileItem);
+                });
+            }
+        });
+    });
+
+    app.use(FileServiceNameSpace, router)
+}
+
+function getServerPath(clientPath:string):string{
+    return path.join(baseFolder, clientPath);
+}
+
+function getClientPath(serverPath:string):string{
+    return serverPath.substr(baseFolder.length);
+}
+
+function convertToFileItem(fullPath: string, callback: (fileItem?: BaseFileItem) => void) {
+    fs.stat(fullPath, (err, state) => {
+        const pathInfo = path.parse(fullPath);
+        if (state.isFile()) {
+            const file = new File();
+            file.extension = pathInfo.ext;
+            file.name = pathInfo.base;
+            file.path = getClientPath(fullPath);
+            callback(file);
+        } else if (state.isDirectory()) {
+            const folder = new Folder();
+            folder.name = pathInfo.base;
+            folder.path = getClientPath(fullPath);
+            callback(folder);
+        } else {
+            callback();
+        }
     });
 }

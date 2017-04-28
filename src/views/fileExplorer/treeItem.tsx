@@ -3,7 +3,8 @@ import * as ReactDOM from 'react-dom';
 
 import { FileType, File, Folder, FileServiceNameSpace, BaseFileItem } from "../../services/file/fileDefinition"
 import { ClientFolder } from "../../services/file/clientFolder";
-import * as FileEditHelper from "../fileEditHelper";
+import * as FileExplorerHelper from "./fileExplorerHelper";
+import * as FileEditorHelper from "../fileEditor/fileEditorHelper";
 import * as $ from "jquery";
 import { Loading } from "../loading";
 import { Menu, MenuItem, MenuDivider } from "../controls/menu";
@@ -96,7 +97,17 @@ export class TreeItem extends React.Component<ITreeItemProperty, ITreeItemState>
 
     onRenameChange(): void {
         const newName = $(this.refs["rename"]).val();
-        if (newName) {
+        if (newName && newName !== this.props.file.name) {
+            const oldName = this.props.file.name;
+            FileExplorerHelper.rename(this.props.file,newName,(newItem)=>{
+                if(newItem && newItem.type === FileType.Folder){
+                    this.loadChildren();
+                }else{
+                    (this.props.file as File).extension = (newItem as File).extension;
+                }
+                this.props.file.path = newItem.path;
+            });
+
             this.props.file.name = newName;
         }
         this.setState({
@@ -128,7 +139,7 @@ export class TreeItem extends React.Component<ITreeItemProperty, ITreeItemState>
     }
 
     onOpenFile(event: React.MouseEvent<HTMLDivElement>): void {
-        FileEditHelper.openFile(this.props.file as File);
+        FileEditorHelper.openFile(this.props.file as File);
     }
 
     //#endregion "File"
@@ -138,15 +149,11 @@ export class TreeItem extends React.Component<ITreeItemProperty, ITreeItemState>
     renderFolder() {
         const expand = this.state.expand;
         const childrenNodes: any[] = this.state.expand ?
-            this.children.sort((a, b) => {
-                if (a.type === FileType.Folder) {
-                    return -1;
-                } else {
-                    return 1;
-                }
-            }).map(f => {
+            (this.children.filter(f => f.type === FileType.Folder).map(f => {
                 return (<TreeItem key={f.path} file={f} />)
-            }) : [];
+            })).concat((this.children.filter(f => f.type === FileType.File).map(f => {
+                return (<TreeItem key={f.path} file={f} />)
+            }))) : [];
         const content = childrenNodes.length > 0 ?
             (<ul className="tree-item">{childrenNodes}</ul>) : null;
 

@@ -2,12 +2,12 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { Splitter, SplitterPanePrimary } from "./controls/splitter";
 import { FileExplorer } from "./fileExplorer/fileExplorer"
-import { FileEditContainer } from "./fileEditContainer";
+import { FileEditorContainer } from "./fileEditor/fileEditorContainer";
 import { WebTerm } from "./webTerm";
 
 export class App extends React.Component<any, any> {
     render() {
-        const fileEdit = (<FileEditContainer></FileEditContainer>);
+        const fileEdit = (<FileEditorContainer></FileEditorContainer>);
         const misc = (<WebTerm />);
 
         const fileExplorer = (<FileExplorer></FileExplorer>);

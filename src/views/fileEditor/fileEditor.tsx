@@ -1,11 +1,11 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 
-import { ClientFile } from "../services/file/clientFile";
-import { FileType, File, Folder, FileServiceNameSpace } from "../services/file/fileDefinition"
+import { ClientFile } from "../../services/file/clientFile";
+import { FileType, File, Folder, FileServiceNameSpace } from "../../services/file/fileDefinition"
 
-import { Loading } from "./loading";
-import * as FileEditHelper from "./fileEditHelper";
+import { Loading } from "../loading";
+import * as FileEditorHelper from "./fileEditorHelper";
 
 import { MonacoEditor } from "./monacoEditor";
 
@@ -25,7 +25,7 @@ export class FileEditor extends React.Component<IFileEditorProperty, IFileEditor
         this.state ={
             loading:true,
             fileContent:null,
-            active:this.props.clientFile.file.path === FileEditHelper.getActiveFile()
+            active:this.props.clientFile.file.path === FileEditorHelper.getActiveFile()
         }
         this.onActiveFileChanged = this.onActiveFileChanged.bind(this);
         this.props.clientFile.read(content=>{
@@ -33,11 +33,11 @@ export class FileEditor extends React.Component<IFileEditorProperty, IFileEditor
         });
     }
     componentDidMount(): void {
-        FileEditHelper.ActiveFileChangeEvent.on(this.onActiveFileChanged);
+        FileEditorHelper.ActiveFileChangeEvent.on(this.onActiveFileChanged);
     }
 
     componentWillUnmount(): void {
-        FileEditHelper.ActiveFileChangeEvent.off(this.onActiveFileChanged);
+        FileEditorHelper.ActiveFileChangeEvent.off(this.onActiveFileChanged);
     }
 
     render() {

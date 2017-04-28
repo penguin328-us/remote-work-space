@@ -2,7 +2,7 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 
 import { ClientFolder } from "../../services/file/clientFolder";
-import { FileType, File, Folder, FileServiceNameSpace, BaseFileItem } from "../../services/file/fileDefinition"
+import { FileType, File, Folder, FileServiceNameSpace, BaseFileItem } from "../../services/file/fileDefinition";
 
 import { Loading } from "../loading";
 import { TreeItem } from "./treeItem";

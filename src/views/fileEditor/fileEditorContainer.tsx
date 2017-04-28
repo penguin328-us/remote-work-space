@@ -1,18 +1,18 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 
-import { ClientFile } from "../services/file/clientFile";
-import { FileType, File, Folder, FileServiceNameSpace } from "../services/file/fileDefinition"
-import * as FileEditHelper from "./fileEditHelper";
+import { ClientFile } from "../../services/file/clientFile";
+import { FileType, File, Folder, FileServiceNameSpace } from "../../services/file/fileDefinition"
+import * as FileEditorHelper from "./fileEditorHelper";
 
 import { FileEditor } from "./fileEditor";
 
-interface IFileEditState{
+interface IFileEditorContainerState{
     opendFiles:ClientFile[];
     activeFile:string;
 }
 
-export class FileEditContainer extends React.Component<any, IFileEditState>{
+export class FileEditorContainer extends React.Component<any, IFileEditorContainerState>{
     constructor(props: any) {
         super(props);
         this.state = {
@@ -26,13 +26,13 @@ export class FileEditContainer extends React.Component<any, IFileEditState>{
     }
 
     componentDidMount():void{
-        FileEditHelper.OpenedFilesChangeEvent.on(this.onOpendFilesChanged);
-        FileEditHelper.ActiveFileChangeEvent.on(this.onActiveFileChanged);
+        FileEditorHelper.OpenedFilesChangeEvent.on(this.onOpendFilesChanged);
+        FileEditorHelper.ActiveFileChangeEvent.on(this.onActiveFileChanged);
     }
 
     componentWillUnmount():void{
-        FileEditHelper.OpenedFilesChangeEvent.off(this.onOpendFilesChanged);
-        FileEditHelper.ActiveFileChangeEvent.off(this.onActiveFileChanged);
+        FileEditorHelper.OpenedFilesChangeEvent.off(this.onOpendFilesChanged);
+        FileEditorHelper.ActiveFileChangeEvent.off(this.onActiveFileChanged);
     }
 
     render() {
@@ -74,12 +74,12 @@ export class FileEditContainer extends React.Component<any, IFileEditState>{
     }
 
     private onClickItem(path:string):void{
-        FileEditHelper.setActiveFile(path);
+        FileEditorHelper.setActiveFile(path);
     }
 
     private onCloseItem(event: React.MouseEvent<HTMLSpanElement>, file: File): void {
         event.stopPropagation();
         event.preventDefault();
-        FileEditHelper.closeFile(file);
+        FileEditorHelper.closeFile(file);
     }
 }
