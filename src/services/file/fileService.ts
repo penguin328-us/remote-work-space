@@ -13,7 +13,7 @@ export function start(app: express.Express): void {
     baseFolder = folder.dir;
     root = new Folder();
     root.name = folder.base;
-    root.path = "/" + folder.name.toLowerCase();
+    root.path = "/" + folder.name;
     initRestApi(app);
 }
 

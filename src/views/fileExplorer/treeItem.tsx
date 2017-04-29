@@ -66,7 +66,7 @@ export class TreeItem extends React.Component<ITreeItemProperty, ITreeItemState>
             }
         });
 
-        $("body").one("mouseup", (() => {
+        $("body").one("mousedown", (() => {
             this.setState({
                 showContextMenu: false
             });
