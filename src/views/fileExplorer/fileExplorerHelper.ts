@@ -16,13 +16,13 @@ export function rename(file: BaseFileItem, newName: string, callback?: (newItem?
     }).then(res => {
         res.json().then(data => {
             const newFile = data as BaseFileItem;
-            if (callback) {
-                callback(newFile);
-            }
             (RenameEvent as Event<IRenameEventArg>).trigger({
                 oldFile: file,
                 newFile: newFile
             });
+            if (callback) {
+                callback(newFile);
+            }
         });
     })
 }

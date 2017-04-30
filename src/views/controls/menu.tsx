@@ -20,10 +20,19 @@ interface IMenuItemProperty {
 }
 
 export class MenuItem extends React.Component<IMenuItemProperty, any>{
+    constructor(props: IMenuItemProperty) {
+        super(props);
+        this.onClick = this.onClick.bind(this);
+    }
     render() {
         return (
-            <li className="menu-item" onClick={this.props.onClick}>{this.props.children}</li>
+            <li className="menu-item" onClick={this.onClick}>{this.props.children}</li>
         );
+    }
+    onClick(): void {
+        if (this.props.onClick) {
+            this.props.onClick();
+        }
     }
 }
 

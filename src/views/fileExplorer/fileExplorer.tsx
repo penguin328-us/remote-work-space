@@ -5,7 +5,7 @@ import { ClientFolder } from "../../services/file/clientFolder";
 import { FileType, File, Folder, FileServiceNameSpace, BaseFileItem } from "../../services/file/fileDefinition";
 
 import { Loading } from "../loading";
-import { TreeItem } from "./treeItem";
+import { FolderItem } from "./folderItem";
 
 interface IFileExplorerState {
     loading: boolean;
@@ -20,6 +20,9 @@ export class FileExplorer extends React.Component<any, IFileExplorerState>{
         this.state = {
             loading: true
         }
+    }
+
+    componentDidMount() {
         this.rootFolder.read((children) => {
             this.roots = children;
             this.setState({
@@ -35,7 +38,7 @@ export class FileExplorer extends React.Component<any, IFileExplorerState>{
                 <ul className="tree-item">
                     {
                         this.roots.map(r => {
-                            return (<TreeItem key={r.path} file={r} expand={true} />);
+                            return (<FolderItem key={r.path} folder={r as Folder} expand={true} />);
                         })
                     }
                 </ul>
