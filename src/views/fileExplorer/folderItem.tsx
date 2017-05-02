@@ -42,12 +42,13 @@ export class FolderItem extends React.Component<IFolderItemProperty, IFolderItem
         this.onContextMenu = this.onContextMenu.bind(this);
         this.onRename = this.onRename.bind(this);
         this.onRenamed = this.onRenamed.bind(this);
+        this.onRequestCloseRename = this.onRequestCloseRename.bind(this);
 
         this.clientFolder = new ClientFolder(this.props.folder.path);
     }
 
-    componentDidMount(){
-        if(this.props.expand){
+    componentDidMount() {
+        if (this.props.expand) {
             this.onToggleExpand();
         }
     }
@@ -75,7 +76,7 @@ export class FolderItem extends React.Component<IFolderItemProperty, IFolderItem
                 <div className="text" onClick={this.onToggleExpand} onContextMenu={this.onContextMenu}>
                     {expandIcon}
                     {folderIcon}
-                    <FileName rename={this.state.rename} file={this.props.folder} onRenamed={this.onRenamed} />
+                    <FileName rename={this.state.rename} file={this.props.folder} onRenamed={this.onRenamed} onRequestCloseRename={this.onRequestCloseRename} />
                 </div>
                 <Menu show={this.state.showContextMenu} position={this.state.contextMenuPos}>
                     <MenuItem>New File</MenuItem>
@@ -119,16 +120,17 @@ export class FolderItem extends React.Component<IFolderItemProperty, IFolderItem
         });
     }
 
-    onRenamed(folder?: BaseFileItem): void {
+    onRenamed(folder: BaseFileItem): void {
+        this.clientFolder.path = folder.path;
+        if (this.state.expand) {
+            this.loadChildren();
+        }
+    }
+
+    onRequestCloseRename() {
         this.setState({
             rename: false
         });
-        if (folder) {
-            this.clientFolder.path = folder.path;
-            if (this.state.expand) {
-                this.loadChildren();
-            }
-        }
     }
 
     onToggleExpand() {

@@ -30,7 +30,7 @@ export class FileItem extends React.Component<IFileItemProperty, IFileItemState>
         this.onOpenFile = this.onOpenFile.bind(this);
         this.onContextMenu = this.onContextMenu.bind(this);
         this.onRename = this.onRename.bind(this);
-        this.onRenamed = this.onRenamed.bind(this);
+        this.onRequestCloseRename = this.onRequestCloseRename.bind(this);
     }
 
     render() {
@@ -38,7 +38,7 @@ export class FileItem extends React.Component<IFileItemProperty, IFileItemState>
             <li className="file">
                 <div className="text" onDoubleClick={this.onOpenFile} onContextMenu={this.onContextMenu}>
                     <i className="material-icons">description</i>
-                    <FileName rename={this.state.rename} file={this.props.file} onRenamed={this.onRenamed} />
+                    <FileName rename={this.state.rename} file={this.props.file} onRequestCloseRename={this.onRequestCloseRename} />
                 </div>
                 <Menu show={this.state.showContextMenu} position={this.state.contextMenuPos}>
                     <MenuItem onClick={this.onRename}>Rename File</MenuItem>
@@ -76,7 +76,7 @@ export class FileItem extends React.Component<IFileItemProperty, IFileItemState>
         });
     }
 
-    onRenamed(): void {
+    onRequestCloseRename(): void {
         this.setState({
             rename: false
         });
