@@ -5,7 +5,8 @@ import { FileType, File } from "../../services/file/fileDefinition"
 import * as FileExplorerHelper from "./fileExplorerHelper";
 import * as FileEditorHelper from "../fileEditor/fileEditorHelper";
 import * as $ from "jquery";
-import { Menu, MenuItem, MenuDivider } from "../controls/menu";
+import { MenuItem, MenuDivider } from "../controls/menu";
+import { ContextMenu } from "../controls/contextMenu";
 import { IPosition } from "../common/layout";
 import { FileName } from "./fileName";
 
@@ -14,8 +15,9 @@ interface IFileItemProperty {
 }
 
 interface IFileItemState {
-    showContextMenu: boolean;
-    contextMenuPos: IPosition;
+    openContextMenu: boolean;
+    contextMenuX: number;
+    contextMenuY: number;
     rename: boolean;
 }
 
@@ -23,12 +25,14 @@ export class FileItem extends React.Component<IFileItemProperty, IFileItemState>
     constructor(props: IFileItemProperty) {
         super(props);
         this.state = {
-            showContextMenu: false,
-            contextMenuPos: {},
+            openContextMenu: false,
+            contextMenuX: 0,
+            contextMenuY: 0,
             rename: false
         }
         this.onOpenFile = this.onOpenFile.bind(this);
         this.onContextMenu = this.onContextMenu.bind(this);
+        this.onContextMenuRequestClose = this.onContextMenuRequestClose.bind(this);
         this.onRename = this.onRename.bind(this);
         this.onRequestCloseRename = this.onRequestCloseRename.bind(this);
     }
@@ -40,10 +44,10 @@ export class FileItem extends React.Component<IFileItemProperty, IFileItemState>
                     <i className="material-icons">description</i>
                     <FileName rename={this.state.rename} file={this.props.file} onRequestCloseRename={this.onRequestCloseRename} />
                 </div>
-                <Menu show={this.state.showContextMenu} position={this.state.contextMenuPos}>
+                <ContextMenu open={this.state.openContextMenu} x={this.state.contextMenuX} y={this.state.contextMenuY} onRequestClose={this.onContextMenuRequestClose}>
                     <MenuItem onClick={this.onRename}>Rename File</MenuItem>
                     <MenuItem>Delete File</MenuItem>
-                </Menu>
+                </ContextMenu>
             </li>
         );
     }
@@ -52,22 +56,17 @@ export class FileItem extends React.Component<IFileItemProperty, IFileItemState>
         event.preventDefault();
         event.stopPropagation();
         this.setState({
-            showContextMenu: true,
-            contextMenuPos: {
-                top: event.pageY,
-                left: event.pageX
-            }
-        }, () => {
-            setTimeout(() => {
-                $("body").one("mouseup", () => {
-                    this.setState({
-                        showContextMenu: false
-                    });
-                });
-            }, 200);
+            openContextMenu: true,
+            contextMenuX: event.pageX,
+            contextMenuY: event.pageY
         });
-
         return false;
+    }
+
+    onContextMenuRequestClose() {
+        this.setState({
+            openContextMenu: false,
+        });
     }
 
     onRename(): void {

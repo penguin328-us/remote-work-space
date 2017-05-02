@@ -3,6 +3,7 @@ import * as ReactDOM from 'react-dom';
 
 import { Popup, IPopupProperty } from "./popup";
 import { IPosition } from "../common/layout";
+
 export class Menu extends React.Component<IPopupProperty, any>{
     render() {
         return (

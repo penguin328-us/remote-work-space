@@ -7,7 +7,8 @@ import * as FileExplorerHelper from "./fileExplorerHelper";
 import * as FileEditorHelper from "../fileEditor/fileEditorHelper";
 import * as $ from "jquery";
 import { Loading } from "../loading";
-import { Menu, MenuItem, MenuDivider } from "../controls/menu";
+import { MenuItem, MenuDivider } from "../controls/menu";
+import { ContextMenu } from "../controls/contextMenu";
 import { IPosition } from "../common/layout";
 import { FileItem } from "./fileItem";
 import { FileName } from "./fileName";
@@ -20,8 +21,9 @@ interface IFolderItemProperty {
 interface IFolderItemState {
     expand?: boolean;
     loading: boolean;
-    showContextMenu: boolean;
-    contextMenuPos: IPosition;
+    openContextMenu: boolean;
+    contextMenuX: number;
+    contextMenuY: number;
     rename: boolean;
 }
 
@@ -34,12 +36,14 @@ export class FolderItem extends React.Component<IFolderItemProperty, IFolderItem
         this.state = {
             expand: false,
             loading: false,
-            showContextMenu: false,
-            contextMenuPos: {},
+            openContextMenu: false,
+            contextMenuX: 0,
+            contextMenuY: 0,
             rename: false
         }
         this.onToggleExpand = this.onToggleExpand.bind(this);
         this.onContextMenu = this.onContextMenu.bind(this);
+        this.onContextMenuRequestClose = this.onContextMenuRequestClose.bind(this);
         this.onRename = this.onRename.bind(this);
         this.onRenamed = this.onRenamed.bind(this);
         this.onRequestCloseRename = this.onRequestCloseRename.bind(this);
@@ -78,13 +82,13 @@ export class FolderItem extends React.Component<IFolderItemProperty, IFolderItem
                     {folderIcon}
                     <FileName rename={this.state.rename} file={this.props.folder} onRenamed={this.onRenamed} onRequestCloseRename={this.onRequestCloseRename} />
                 </div>
-                <Menu show={this.state.showContextMenu} position={this.state.contextMenuPos}>
+                <ContextMenu open={this.state.openContextMenu} x={this.state.contextMenuX} y={this.state.contextMenuY} onRequestClose={this.onContextMenuRequestClose}>
                     <MenuItem>New File</MenuItem>
                     <MenuItem>Upload File...</MenuItem>
                     <MenuDivider />
                     <MenuItem onClick={this.onRename}>Rename Folder</MenuItem>
                     <MenuItem>Delete Folder</MenuItem>
-                </Menu>
+                </ContextMenu>
                 {content}
             </li>
         );
@@ -96,22 +100,18 @@ export class FolderItem extends React.Component<IFolderItemProperty, IFolderItem
         event.preventDefault();
         event.stopPropagation();
         this.setState({
-            showContextMenu: true,
-            contextMenuPos: {
-                top: event.pageY,
-                left: event.pageX
-            }
-        }, () => {
-            setTimeout(() => {
-                $("body").one("mouseup", () => {
-                    this.setState({
-                        showContextMenu: false
-                    });
-                });
-            }, 200);
+            openContextMenu: true,
+            contextMenuX: event.pageX,
+            contextMenuY: event.pageY
         });
 
         return false;
+    }
+
+    onContextMenuRequestClose() {
+        this.setState({
+            openContextMenu: false
+        });
     }
 
     onRename(): void {
