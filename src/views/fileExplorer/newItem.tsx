@@ -28,6 +28,13 @@ export class NewItem extends React.Component<INewItemProperty, INewItemState>{
         this.onKeyPress = this.onKeyPress.bind(this);
     }
 
+    componentDidMount(){
+        if(this.state.edit){
+            const edit = this.refs["rename"] as HTMLInputElement;
+            $(edit).focus();
+        }
+    }
+
     render() {
         const icon = (<i className="material-icons">{this.props.fileType === FileType.File ? "description" : "folder"}</i>);
         const content = this.state.edit ?
