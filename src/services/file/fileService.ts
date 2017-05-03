@@ -19,7 +19,7 @@ export function start(app: express.Express): void {
 
 function initRestApi(app: express.Express): void {
     const router = express.Router();
-    router.get(`/readdir`, (req, res) => {
+    router.get(`/dir`, (req, res) => {
         if (req.query.path === "/") {
             res.send([root]);
         } else {
@@ -47,7 +47,20 @@ function initRestApi(app: express.Express): void {
         }
     });
 
-    router.get(`/readFile`, (req, res) => {
+    router.put("/dir", (req, res) => {
+        const dir = getServerPath(req.path);
+        fs.mkdir(dir, (err) => {
+            if(err){
+                res.status(500).send(err.message);
+            }else{
+                convertToFileItem(dir,(item)=>{
+                    res.send(item);
+                });
+            }
+        });
+    });
+
+    router.get(`/file`, (req, res) => {
         const fullPath = getServerPath(req.query.path);
         fs.readFile(fullPath, (err, data) => {
             if (err) {
@@ -56,6 +69,10 @@ function initRestApi(app: express.Express): void {
                 res.send(data);
             }
         });
+    });
+
+    router.put("/file", (req, res) => {
+        const fullPath = getServerPath(req.path);
     });
 
     router.post(`/rename`, (req, res) => {

@@ -7,7 +7,7 @@ export class ClientFolder {
     }
 
     public read(callback: (children: BaseFileItem[]) => void) {
-        fetch(`${FileServiceNameSpace}/readdir?path=${this.path}`).then(res => {
+        fetch(`${FileServiceNameSpace}/dir?path=${this.path}`).then(res => {
             res.json().then(children => {
                 callback(children as BaseFileItem[]);
             });

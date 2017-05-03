@@ -12,7 +12,7 @@ export class ClientFile {
         if (this.fileContent) {
             callback(this.fileContent);
         } else {
-            fetch(`${FileServiceNameSpace}/readFile?path=${this.file.path}`).then(res=>{
+            fetch(`${FileServiceNameSpace}/file?path=${this.file.path}`).then(res=>{
                 res.blob().then(content=>{
                     this.fileContent = content;
                     callback(this.fileContent);
