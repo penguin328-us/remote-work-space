@@ -6,12 +6,13 @@ import { ClientFolder } from "../../services/file/clientFolder";
 import * as FileExplorerHelper from "./fileExplorerHelper";
 import * as FileEditorHelper from "../fileEditor/fileEditorHelper";
 import * as $ from "jquery";
-import { Loading } from "../loading";
+import { Loading } from "../common/loading";
 import { MenuItem, MenuDivider } from "../controls/menu";
 import { ContextMenu } from "../controls/contextMenu";
 import { IPosition } from "../common/layout";
 import { FileItem } from "./fileItem";
 import { FileName } from "./fileName";
+import { NewItem } from "./newItem";
 
 interface IFolderItemProperty {
     folder: Folder;
@@ -25,6 +26,8 @@ interface IFolderItemState {
     contextMenuX: number;
     contextMenuY: number;
     rename: boolean;
+    newItem: boolean;
+    newItemType: FileType;
 }
 
 export class FolderItem extends React.Component<IFolderItemProperty, IFolderItemState>{
@@ -39,7 +42,9 @@ export class FolderItem extends React.Component<IFolderItemProperty, IFolderItem
             openContextMenu: false,
             contextMenuX: 0,
             contextMenuY: 0,
-            rename: false
+            rename: false,
+            newItem: false,
+            newItemType: FileType.File
         }
         this.onToggleExpand = this.onToggleExpand.bind(this);
         this.onContextMenu = this.onContextMenu.bind(this);
@@ -59,12 +64,21 @@ export class FolderItem extends React.Component<IFolderItemProperty, IFolderItem
 
     render() {
         const expand = this.state.expand;
-        const childrenNodes: any[] = this.state.expand ?
-            (this.children.filter(f => f.type === FileType.Folder).map(f => {
-                return (<FolderItem key={f.path} folder={f as Folder} />)
-            })).concat((this.children.filter(f => f.type === FileType.File).map(f => {
-                return (<FileItem key={f.path} file={f as File} />)
-            }))) : [];
+        const childrenNodes: any[] = []
+        if (this.state.expand) {
+            if (this.state.newItem) {
+                childrenNodes.push(
+                    (<NewItem key="newitem" fileType={this.state.newItemType} />)
+                )
+            }
+            childrenNodes.push(
+                (this.children.filter(f => f.type === FileType.Folder).map(f => {
+                    return (<FolderItem key={f.path} folder={f as Folder} />)
+                })).concat((this.children.filter(f => f.type === FileType.File).map(f => {
+                    return (<FileItem key={f.path} file={f as File} />)
+                })))
+            )
+        }
         const content = childrenNodes.length > 0 ?
             (<ul className="tree-item">{childrenNodes}</ul>) : null;
 
@@ -83,8 +97,9 @@ export class FolderItem extends React.Component<IFolderItemProperty, IFolderItem
                     <FileName rename={this.state.rename} file={this.props.folder} onRenamed={this.onRenamed} onRequestCloseRename={this.onRequestCloseRename} />
                 </div>
                 <ContextMenu open={this.state.openContextMenu} x={this.state.contextMenuX} y={this.state.contextMenuY} onRequestClose={this.onContextMenuRequestClose}>
-                    <MenuItem>New File</MenuItem>
+                    <MenuItem onClick={() => { this.onNewItem(FileType.File) }}>New File</MenuItem>
                     <MenuItem>Upload File...</MenuItem>
+                    <MenuItem onClick={() => { this.onNewItem(FileType.Folder) }}>New Folder</MenuItem>
                     <MenuDivider />
                     <MenuItem onClick={this.onRename}>Rename Folder</MenuItem>
                     <MenuItem>Delete Folder</MenuItem>
@@ -112,6 +127,16 @@ export class FolderItem extends React.Component<IFolderItemProperty, IFolderItem
         this.setState({
             openContextMenu: false
         });
+    }
+
+    onNewItem(type: FileType) {
+        this.setState({
+            newItem: true,
+            newItemType: type
+        });
+        if (!this.state.expand) {
+            this.onToggleExpand();
+        }
     }
 
     onRename(): void {

@@ -6,7 +6,7 @@ import { ClientFolder } from "../../services/file/clientFolder";
 import * as FileExplorerHelper from "./fileExplorerHelper";
 import * as FileEditorHelper from "../fileEditor/fileEditorHelper";
 import * as $ from "jquery";
-import { Loading } from "../loading";
+import { Loading } from "../common/loading";
 import { Menu, MenuItem, MenuDivider } from "../controls/menu";
 import { IPosition } from "../common/layout";
 

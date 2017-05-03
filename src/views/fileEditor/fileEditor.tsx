@@ -4,7 +4,7 @@ import * as ReactDOM from 'react-dom';
 import { ClientFile } from "../../services/file/clientFile";
 import { FileType, File, Folder, FileServiceNameSpace } from "../../services/file/fileDefinition"
 
-import { Loading } from "../loading";
+import { Loading } from "../common/loading";
 import * as FileEditorHelper from "./fileEditorHelper";
 
 import { MonacoEditor } from "./monacoEditor";

@@ -4,7 +4,7 @@ import * as ReactDOM from 'react-dom';
 import { ClientFolder } from "../../services/file/clientFolder";
 import { FileType, File, Folder, FileServiceNameSpace, BaseFileItem } from "../../services/file/fileDefinition";
 
-import { Loading } from "../loading";
+import { Loading } from "../common/loading";
 import { FolderItem } from "./folderItem";
 
 interface IFileExplorerState {

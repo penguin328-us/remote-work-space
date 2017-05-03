@@ -2,7 +2,7 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 
 import * as $ from "jquery";
-import { FileType, File, Folder, BaseFileItem } from "../../services/file/fileDefinition"
+import { FileType, File, Folder, BaseFileItem } from "../../services/file/fileDefinition";
 import * as FileExplorerHelper from "./fileExplorerHelper";
 
 interface IFileNameProperty {
