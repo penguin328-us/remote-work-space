@@ -13,6 +13,7 @@ import { IPosition } from "../common/layout";
 import { FileItem } from "./fileItem";
 import { FileName } from "./fileName";
 import { NewItem } from "./newItem";
+import { UploadFile } from "./uploadFile";
 
 interface IFolderItemProperty {
     folder: Folder;
@@ -28,6 +29,7 @@ interface IFolderItemState {
     rename: boolean;
     newItem: boolean;
     newItemType: FileType;
+    uploadFile:any;
 }
 
 export class FolderItem extends React.Component<IFolderItemProperty, IFolderItemState>{
@@ -44,11 +46,17 @@ export class FolderItem extends React.Component<IFolderItemProperty, IFolderItem
             contextMenuY: 0,
             rename: false,
             newItem: false,
-            newItemType: FileType.File
+            newItemType: FileType.File,
+            uploadFile: null,
         }
         this.onToggleExpand = this.onToggleExpand.bind(this);
         this.onContextMenu = this.onContextMenu.bind(this);
         this.onContextMenuRequestClose = this.onContextMenuRequestClose.bind(this);
+
+        this.onCreatedNewItem = this.onCreatedNewItem.bind(this);
+        this.onUploadFile = this.onUploadFile.bind(this);
+        this.onUploadFileChange = this.onUploadFileChange.bind(this);
+        this.onUploadedFile = this.onUploadedFile.bind(this);
         this.onRename = this.onRename.bind(this);
         this.onRenamed = this.onRenamed.bind(this);
         this.onRequestCloseRename = this.onRequestCloseRename.bind(this);
@@ -68,13 +76,18 @@ export class FolderItem extends React.Component<IFolderItemProperty, IFolderItem
         if (this.state.expand) {
             if (this.state.newItem) {
                 childrenNodes.push(
-                    (<NewItem key="newitem" fileType={this.state.newItemType} />)
-                )
+                    (<NewItem key="newitem" fileType={this.state.newItemType} folderPath={this.props.folder.path} onCreatedNewItem={this.onCreatedNewItem} />)
+                );
+            }
+            if (this.state.uploadFile) {
+                childrenNodes.push(
+                    (<UploadFile key="uploadFile" file={this.state.uploadFile} folderPath={this.props.folder.path} onUploaded={this.onUploadedFile} />)
+                );
             }
             childrenNodes.push(
-                (this.children.filter(f => f.type === FileType.Folder).map(f => {
+                (this.children.filter(f => f.type === FileType.Folder).sort((a,b)=>{return a.name.localeCompare(b.name)}).map(f => {
                     return (<FolderItem key={f.path} folder={f as Folder} />)
-                })).concat((this.children.filter(f => f.type === FileType.File).map(f => {
+                })).concat((this.children.filter(f => f.type === FileType.File).sort((a,b)=>{return a.name.localeCompare(b.name)}).map(f => {
                     return (<FileItem key={f.path} file={f as File} />)
                 })))
             )
@@ -96,9 +109,13 @@ export class FolderItem extends React.Component<IFolderItemProperty, IFolderItem
                     {folderIcon}
                     <FileName rename={this.state.rename} file={this.props.folder} onRenamed={this.onRenamed} onRequestCloseRename={this.onRequestCloseRename} />
                 </div>
+                <input type="file" ref="file" onChange={ this.onUploadFileChange } style={{
+                    position:"fixed",
+                    top:"-100",
+                }}/>
                 <ContextMenu open={this.state.openContextMenu} x={this.state.contextMenuX} y={this.state.contextMenuY} onRequestClose={this.onContextMenuRequestClose}>
                     <MenuItem onClick={() => { this.onNewItem(FileType.File) }}>New File</MenuItem>
-                    <MenuItem>Upload File...</MenuItem>
+                    <MenuItem onClick={this.onUploadFile}>Upload File...</MenuItem>
                     <MenuItem onClick={() => { this.onNewItem(FileType.Folder) }}>New Folder</MenuItem>
                     <MenuDivider />
                     <MenuItem onClick={this.onRename}>Rename Folder</MenuItem>
@@ -137,6 +154,40 @@ export class FolderItem extends React.Component<IFolderItemProperty, IFolderItem
         if (!this.state.expand) {
             this.onToggleExpand();
         }
+    }
+
+    onCreatedNewItem(newItem?: BaseFileItem) {
+        if (newItem) {
+            this.children.push(newItem);
+        }
+        this.setState({
+            newItem: false
+        });
+    }
+
+    onUploadFile(){
+        $(this.refs["file"]).click();
+    }
+
+    onUploadFileChange() {
+        const file = this.refs["file"] as HTMLInputElement;
+        if (file.files && file.files.length > 0) {
+            this.setState({
+                uploadFile: file.files[0]
+            });
+            if (!this.state.expand) {
+                this.onToggleExpand();
+            }
+        }
+    }
+
+    onUploadedFile(newItem?: BaseFileItem) {
+        if (newItem) {
+            this.children.push(newItem);
+        }
+        this.setState({
+            uploadFile: undefined
+        });
     }
 
     onRename(): void {

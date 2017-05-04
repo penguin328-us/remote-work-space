@@ -2,11 +2,14 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 
 import * as $ from "jquery";
-import { FileType, File, Folder, BaseFileItem } from "../../services/file/fileDefinition"
+import { FileType, File, Folder, BaseFileItem } from "../../services/file/fileDefinition";
+import * as FileExplorerHelper from "./fileExplorerHelper";
 import { LoadingH } from "../common/loadingH";
 
 interface INewItemProperty {
+    folderPath: string;
     fileType: FileType;
+    onCreatedNewItem: (newItem?: BaseFileItem) => void
 };
 
 interface INewItemState {
@@ -63,6 +66,16 @@ export class NewItem extends React.Component<INewItemProperty, INewItemState>{
             name: name,
             edit: false
         });
+        if (name) {
+            const path = this.props.folderPath + "/" + name;
+            if (this.props.fileType === FileType.File) {
+                FileExplorerHelper.createFile(path, this.props.onCreatedNewItem);
+            } else {
+                FileExplorerHelper.mkdir(path, this.props.onCreatedNewItem);
+            }
+        } else {
+            this.props.onCreatedNewItem();
+        }
     }
 
     onKeyPress(event: React.KeyboardEvent<HTMLInputElement>) {

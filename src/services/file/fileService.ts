@@ -48,7 +48,7 @@ function initRestApi(app: express.Express): void {
     });
 
     router.put("/dir", (req, res) => {
-        const dir = getServerPath(req.path);
+        const dir = getServerPath(req.query.path);
         fs.mkdir(dir, (err) => {
             if(err){
                 res.status(500).send(err.message);
@@ -72,7 +72,19 @@ function initRestApi(app: express.Express): void {
     });
 
     router.put("/file", (req, res) => {
-        const fullPath = getServerPath(req.path);
+        const fullPath = getServerPath(req.query.path);
+        fs.open(fullPath, "wx", (err, fd) => {
+            if (err || !fd) {
+                res.status(500).send("File exists");
+            } else {
+                req.pipe(fs.createWriteStream(fullPath,{
+                    fd:fd
+                }));
+                convertToFileItem(fullPath, (item) => {
+                    res.send(item);
+                });
+            }
+        })
     });
 
     router.post(`/rename`, (req, res) => {

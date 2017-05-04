@@ -26,3 +26,42 @@ export function rename(file: BaseFileItem, newName: string, callback?: (newItem?
         });
     })
 }
+
+export function mkdir(path: string, callback?: (newItem?: BaseFileItem) => void) {
+    fetch(`${FileServiceNameSpace}/dir?path=${path}`, {
+        method: "PUT"
+    }).then(res => {
+        if (res.ok) {
+            res.json().then(data => {
+                if (callback) {
+                    callback(data);
+                }
+            });
+        }
+        else {
+            if (callback) {
+                callback();
+            }
+        }
+    });
+}
+
+export function createFile(path: string, callback?: (newItem?: BaseFileItem) => void, content?: any) {
+    fetch(`${FileServiceNameSpace}/file?path=${path}`, {
+        method: "PUT",
+        body: content
+    }).then(res => {
+        if (res.ok) {
+            res.json().then(data => {
+                if (callback) {
+                    callback(data);
+                }
+            });
+        }
+        else {
+            if (callback) {
+                callback();
+            }
+        }
+    });
+}

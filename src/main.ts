@@ -11,6 +11,7 @@ const server = http.createServer(app);
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
 app.use(express.static(path.resolve(__dirname, "client")));
 
 server.listen(process.env.PORT || 9999, process.env.IP || "0.0.0.0", () => {
