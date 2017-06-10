@@ -69,3 +69,26 @@ svg.loading-h rect{
     border-color: #bbbbbb;
     color: #bbbbbb;
 }
+
+.dialog-bg{
+    background-color: rgba(0,0, 0, 0.5)
+}
+
+.dialog{
+    background-color: #1e1e1e;
+    color:#bbbbbb;
+    box-shadow: 2px 2px 2px 1px black;
+    border-color: #111111;
+}
+
+.dialog-title{
+    color: #dddddd;
+}
+
+.dialog-button{
+    color:#57c66f
+}
+
+.dialog-button:hover{
+    background-color: #333333;
+}

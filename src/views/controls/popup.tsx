@@ -5,13 +5,13 @@ import { IPosition } from "../common/layout"
 
 export interface IPopupProperty {
     position: IPosition
-    show?: boolean
+    open?: boolean
 }
 
 export class Popup extends React.Component<IPopupProperty, any>{
     render() {
         return (<div className="popup" style={{
-            display: this.props.show ? "block" : "none",
+            display: this.props.open ? "block" : "none",
             top: this.props.position.top,
             left: this.props.position.left,
             bottom: this.props.position.bottom,

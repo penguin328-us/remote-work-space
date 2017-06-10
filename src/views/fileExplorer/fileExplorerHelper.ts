@@ -46,6 +46,23 @@ export function mkdir(path: string, callback?: (newItem?: BaseFileItem) => void)
     });
 }
 
+export function rmdir(path: string, callback?: () => void) {
+     fetch(`${FileServiceNameSpace}/dir?path=${path}`, {
+        method: "DELETE",
+    }).then(res => {
+        if (res.ok) {
+            if (callback) {
+                callback();
+            }
+        }
+        else {
+            if (callback) {
+                callback();
+            }
+        }
+    });
+}
+
 export function createFile(path: string, callback?: (newItem?: BaseFileItem) => void, content?: any) {
     fetch(`${FileServiceNameSpace}/file?path=${path}`, {
         method: "PUT",
@@ -57,6 +74,23 @@ export function createFile(path: string, callback?: (newItem?: BaseFileItem) => 
                     callback(data);
                 }
             });
+        }
+        else {
+            if (callback) {
+                callback();
+            }
+        }
+    });
+}
+
+export function deleteFile(path: string, callback?: () => void) {
+     fetch(`${FileServiceNameSpace}/file?path=${path}`, {
+        method: "DELETE",
+    }).then(res => {
+        if (res.ok) {
+            if (callback) {
+                callback();
+            }
         }
         else {
             if (callback) {

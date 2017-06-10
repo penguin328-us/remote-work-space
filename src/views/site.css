@@ -156,3 +156,40 @@ body,
 .menu-divider hr{
     border-top: none;
 }
+
+
+.dialog-bg{
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.dialog{
+    border-width: 1px;
+    border-style:solid;
+    text-align: left;
+    max-height: 100%;
+    overflow: auto;
+    padding: 10px;
+    display: inline-block;
+}
+
+.dialog-title{
+    font-size: 14px;
+    font-weight: bold;
+    padding-bottom: 10px;
+}
+
+.dialog-button{
+    text-align: left;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 3px;
+    padding-bottom: 3px;
+}

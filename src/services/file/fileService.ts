@@ -2,6 +2,7 @@ import { FileType, File, Folder, FileServiceNameSpace, BaseFileItem } from "./fi
 import * as fs from "fs";
 import * as path from "path";
 import * as express from "express";
+import * as rimraf from "rimraf";
 
 const appSettings = require("../../../appsettings.json");
 
@@ -60,6 +61,21 @@ function initRestApi(app: express.Express): void {
         });
     });
 
+    router.delete(`/dir`, (req, res) => {
+        if (req.query.path === "/") {
+            res.status(500).send("cannot remove root folder");
+        } else {
+            const dir = getServerPath(req.query.path);
+            rimraf(dir, (err) => {
+                if (err) {
+                    res.status(500).send(err);
+                } else {
+                    res.send("OK");
+                }
+            });
+        }
+    });
+
     router.get(`/file`, (req, res) => {
         const fullPath = getServerPath(req.query.path);
         fs.readFile(fullPath, (err, data) => {
@@ -85,6 +101,17 @@ function initRestApi(app: express.Express): void {
                 });
             }
         })
+    });
+
+    router.delete(`/file`, (req, res) => {
+        const fullPath = getServerPath(req.query.path);
+        fs.unlink(fullPath, (err) => {
+            if (err) {
+                res.status(500).send(err.message)
+            } else {
+                res.send("OK");
+            }
+        });
     });
 
     router.post(`/rename`, (req, res) => {

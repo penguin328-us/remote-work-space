@@ -7,7 +7,7 @@ import { IPosition } from "../common/layout";
 export class Menu extends React.Component<IPopupProperty, any>{
     render() {
         return (
-            <Popup show={this.props.show} position={this.props.position}>
+            <Popup open={this.props.open} position={this.props.position}>
                 <ul className="menu">
                     {this.props.children}
                 </ul>

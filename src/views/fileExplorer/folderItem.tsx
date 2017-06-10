@@ -14,6 +14,7 @@ import { FileItem } from "./fileItem";
 import { FileName } from "./fileName";
 import { NewItem } from "./newItem";
 import { UploadFile } from "./uploadFile";
+import { ConfirmDialog } from "../controls/confirmDialog";
 
 interface IFolderItemProperty {
     folder: Folder;
@@ -30,6 +31,8 @@ interface IFolderItemState {
     newItem: boolean;
     newItemType: FileType;
     uploadFile:any;
+    openDeleteConfirmDialog:boolean;
+    isDelete:boolean;
 }
 
 export class FolderItem extends React.Component<IFolderItemProperty, IFolderItemState>{
@@ -48,6 +51,8 @@ export class FolderItem extends React.Component<IFolderItemProperty, IFolderItem
             newItem: false,
             newItemType: FileType.File,
             uploadFile: null,
+            openDeleteConfirmDialog: false,
+            isDelete: false
         }
         this.onToggleExpand = this.onToggleExpand.bind(this);
         this.onContextMenu = this.onContextMenu.bind(this);
@@ -60,6 +65,9 @@ export class FolderItem extends React.Component<IFolderItemProperty, IFolderItem
         this.onRename = this.onRename.bind(this);
         this.onRenamed = this.onRenamed.bind(this);
         this.onRequestCloseRename = this.onRequestCloseRename.bind(this);
+        this.onDeleteClick = this.onDeleteClick.bind(this);
+        this.onRequstCloseDeleteConfirmDialog = this.onRequstCloseDeleteConfirmDialog.bind(this);
+        this.onDeleteConfirm = this.onDeleteConfirm.bind(this);
 
         this.clientFolder = new ClientFolder(this.props.folder.path);
     }
@@ -102,26 +110,31 @@ export class FolderItem extends React.Component<IFolderItemProperty, IFolderItem
 
         const folderIcon = this.state.loading ? (<Loading size={14} />) : (<i className="material-icons">folder</i>);
 
-        return (
+        return this.state.isDelete ? null : (
             <li className="folder">
                 <div className="text" onClick={this.onToggleExpand} onContextMenu={this.onContextMenu}>
                     {expandIcon}
                     {folderIcon}
                     <FileName rename={this.state.rename} file={this.props.folder} onRenamed={this.onRenamed} onRequestCloseRename={this.onRequestCloseRename} />
                 </div>
-                <input type="file" ref="file" onChange={ this.onUploadFileChange } style={{
-                    position:"fixed",
-                    top:"-100",
-                }}/>
+                <input type="file" ref="file" onChange={this.onUploadFileChange} style={{
+                    position: "fixed",
+                    top: "-100",
+                }} />
                 <ContextMenu open={this.state.openContextMenu} x={this.state.contextMenuX} y={this.state.contextMenuY} onRequestClose={this.onContextMenuRequestClose}>
                     <MenuItem onClick={() => { this.onNewItem(FileType.File) }}>New File</MenuItem>
                     <MenuItem onClick={this.onUploadFile}>Upload File...</MenuItem>
                     <MenuItem onClick={() => { this.onNewItem(FileType.Folder) }}>New Folder</MenuItem>
                     <MenuDivider />
                     <MenuItem onClick={this.onRename}>Rename Folder</MenuItem>
-                    <MenuItem>Delete Folder</MenuItem>
+                    <MenuItem onClick={this.onDeleteClick}>Delete Folder</MenuItem>
                 </ContextMenu>
                 {content}
+                <ConfirmDialog open={this.state.openDeleteConfirmDialog} width="400"
+                    onRequestClose={this.onRequstCloseDeleteConfirmDialog}
+                    onConfirm={this.onDeleteConfirm} title="Confirm to Delete Folder">
+                    Are you sure to delete folder <b>{this.props.folder.name}</b> ?
+                </ConfirmDialog>
             </li>
         );
     }
@@ -206,6 +219,24 @@ export class FolderItem extends React.Component<IFolderItemProperty, IFolderItem
     onRequestCloseRename() {
         this.setState({
             rename: false
+        });
+    }
+
+     onDeleteClick(): void {
+        this.setState({
+            openDeleteConfirmDialog: true
+        });
+    }
+
+    onRequstCloseDeleteConfirmDialog(): void {
+        this.setState({
+            openDeleteConfirmDialog: false
+        });
+    }
+    onDeleteConfirm(): void {
+        FileExplorerHelper.rmdir(this.props.folder.path);
+        this.setState({
+            isDelete: true
         });
     }
 

@@ -44,7 +44,7 @@ export class ContextMenu extends React.Component<IContextMenuProperty, IContextM
 
     render() {
         return (
-            <Menu show={this.props.open} position={this.state.position}>
+            <Menu open={this.props.open} position={this.state.position}>
                 {this.props.children}
             </Menu>);
     }
