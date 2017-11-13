@@ -41,5 +41,9 @@
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0",
     "xterm": "^2.5.0"
+  },
+  "engines": {
+    "node": "6.1.0",
+    "npm": "3.8.6"
   }
 }
