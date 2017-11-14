@@ -7,4 +7,4 @@ export function postJson(url: string, json: any) {
         },
         body: JSON.stringify(json)
     });
-}
+};

@@ -13,7 +13,7 @@ export function rename(file: BaseFileItem, newName: string, callback?: (newItem?
     Request.postJson(`${FileServiceNameSpace}/rename`, {
         file: file,
         newName: newName
-    }).then(res => {
+    }).then((res:Response) => {
         res.json().then(data => {
             const newFile = data as BaseFileItem;
             (RenameEvent as Event<IRenameEventArg>).trigger({
