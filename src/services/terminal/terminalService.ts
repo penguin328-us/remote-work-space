@@ -1,9 +1,18 @@
 import * as express from "express";
-const pty = require("node-pty");
+
 
 let terminals: any = {};
 let logs: any = {};
 export function start(app: express.Express): void {
+    try {
+        const pty = require("node-pty");
+        enableTerminalService(app, pty);
+    } catch (err) {
+        console.log("node-pty is not installed, Terminial Service will be disabled");
+    }
+}
+
+function enableTerminalService(app: express.Express, pty: any) {
     app.post('/terminals', function (req, res) {
         var cols = parseInt(req.query.cols),
             rows = parseInt(req.query.rows),
@@ -36,7 +45,7 @@ export function start(app: express.Express): void {
         res.end();
     });
 
-    (app as any).ws('/terminals/:pid', function (ws:any, req:any) {
+    (app as any).ws('/terminals/:pid', function (ws: any, req: any) {
         var term = terminals[parseInt(req.params.pid)];
         console.log('Connected to terminal ' + term.pid);
         ws.send(logs[term.pid]);

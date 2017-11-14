@@ -15,7 +15,6 @@
     "body-parser": "^1.17.1",
     "express": "^4.15.2",
     "express-ws": "^3.0.0",
-    "node-pty": "^0.6.4",
     "rimraf": "^2.6.1"
   },
   "devDependencies": {
@@ -41,6 +40,9 @@
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0",
     "xterm": "^2.5.0"
+  },
+  "optionalDependencies": {
+    "node-pty": "^0.6.4"
   },
   "engines": {
     "node": "6.1.0",

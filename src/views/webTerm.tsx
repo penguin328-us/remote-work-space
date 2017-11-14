@@ -23,33 +23,38 @@ export class WebTerm extends React.Component<any, any>{
         const protocol = (location.protocol === 'https:') ? 'wss://' : 'ws://';
         let socketURL = protocol + location.hostname + ((location.port) ? (':' + location.port) : '') + '/terminals/';
         const self = this;
-        fetch('/terminals?cols=' + cols + '&rows=' + rows, { method: 'POST' }).then(function (res) {
-            res.text().then(function (pid) {
-                self.term = new ((window as any).Terminal)({
-                    cursorBlink: true,
-                });
-                self.term.open(div);
-                self.term.on('resize', function (size: any) {
-                    if (!pid) {
-                        return;
+        fetch('/terminals?cols=' + cols + '&rows=' + rows, { method: 'POST' }).then((res: Response) => {
+            if (res.status !== 200) {
+                div.style.color = "red";
+                div.innerText = "Ternimal service is not eanbled on server";
+            } else {
+                res.text().then(function (pid) {
+                    self.term = new ((window as any).Terminal)({
+                        cursorBlink: true,
+                    });
+                    self.term.open(div);
+                    self.term.on('resize', function (size: any) {
+                        if (!pid) {
+                            return;
+                        }
+                        var cols = size.cols,
+                            rows = size.rows,
+                            url = '/terminals/' + pid + '/size?cols=' + cols + '&rows=' + rows;
+
+                        fetch(url, { method: 'POST' });
+                    });
+
+                    self.term.fit();
+                    self.term.setOption("cursorStyle", "underline");
+                    self.pid = pid;
+                    socketURL += pid;
+                    const socket = new WebSocket(socketURL);
+                    socket.onopen = () => {
+                        self.term.attach(socket);
+                        self.term._initialized = true;
                     }
-                    var cols = size.cols,
-                        rows = size.rows,
-                        url = '/terminals/' + pid + '/size?cols=' + cols + '&rows=' + rows;
-
-                    fetch(url, { method: 'POST' });
                 });
-
-                self.term.fit();
-                self.term.setOption("cursorStyle", "underline");
-                self.pid = pid;
-                socketURL += pid;
-                const socket = new WebSocket(socketURL);
-                socket.onopen = () => {
-                    self.term.attach(socket);
-                    self.term._initialized = true;
-                }
-            });
+            }
         });
 
         window.addEventListener("resize", this.onWindowResize);
